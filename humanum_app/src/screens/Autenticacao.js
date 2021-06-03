@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native'
+import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ToastAndroid} from 'react-native'
 
 import Input from '../components/AutenticacaoInputs'
 import commonStyles from '../commonStyles'
 import axios from 'axios'
 const initialState = {
     nome: '',
-    email: 'enzo.spinella@gmail.com',
-    senha: '01212012120',
+    email: '',
+    senha: '',
     confirmarSenha: '',
     telefone: '',
     dataNascimento: '',
@@ -103,8 +103,19 @@ export default class Autenticacao extends Component {
                             onPress = {
                                 () => {
                                     if(this.state.novoUsuario){
+                                        if(this.state.nome === '' || this.state.email === ''
+                                        || this.state.senha === '' || this.state.confirmarSenha === ''
+                                        || this.state.dataNascimento || this.state.sexo === ''){
+                                            ToastAndroid.show('Preencha todos os campos!', ToastAndroid.LONG)
+                                            return 0
+                                        }
                                         if(this.state.senha === this.state.confirmarSenha)
                                             this.cadastrar()
+                                        else
+                                            ToastAndroid.show('Confirme sua senha corretamente!', ToastAndroid.LONG)
+                                    }
+                                    else{
+                                        buscar(this.state.email, this.state.senha)
                                     }
                                 }
                             }>
@@ -126,6 +137,22 @@ export default class Autenticacao extends Component {
                 </View>
             </SafeAreaView>
         )
+    }
+}
+
+async function buscar(email, senha){
+    try {
+        var url = 'http://192.168.15.7:3002/usuarios'
+        const response = await axios.get(url);
+        console.log(response.data);
+        let usuario = response.data.filter(objeto => objeto["email"] === email && objeto["senha"] === senha)
+        console.log(usuario)
+        // if(usuario == null)
+        //     console.log('nao achou :/')
+        // else
+        //     console.log('achou!')
+    } catch (error) {
+        console.error(error);
     }
 }
 
