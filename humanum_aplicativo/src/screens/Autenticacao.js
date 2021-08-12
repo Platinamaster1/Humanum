@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
-import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ToastAndroid} from 'react-native'
+import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ToastAndroid, Picker} from 'react-native'
 
 import Input from '../components/AutenticacaoInputs'
 import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
+import DatePicker from 'react-native-datepicker'
 const initialState = {
     nome: '',
     email: '',
     senha: '',
     confirmarSenha: '',
     telefone: '',
-    dataNascimento: '',
-    sexo: '',
+    dataNascimento: '2000-01-01',
+    sexo: 'Masculino',
     novoUsuario: false
 }
 
@@ -43,10 +44,12 @@ export default class Autenticacao extends Component {
             descricao: null,
             pontos: 0,
             moderador: 0,
-            datacriacao: data
+            datacriacao: data,
+            senha: this.state.senha
         })
         .then(function (response) {
             console.log(response);
+            ToastAndroid.show('Usuario cadastrado com sucesso!', ToastAndroid.LONG)
         })
           .catch(function (error) {
             console.log(error);
@@ -84,10 +87,32 @@ export default class Autenticacao extends Component {
                                     onChangeText={confirmarSenha => this.setState({ confirmarSenha })} secureTextEntry={true}/> : null}
                                 {this.state.novoUsuario ? <Input icon='phone' placeholder='Telefone' value={this.state.telefone} style={st.label}
                                     onChangeText={telefone => this.setState({ telefone })}/> : null}
-                                {this.state.novoUsuario ? <Input icon='birthday-cake' placeholder='Data de Nascimento' value={this.state.dataNascimento} style={st.label}
-                                    onChangeText={dataNascimento => this.setState({ dataNascimento })}/> : null}
-                                {this.state.novoUsuario ? <Input icon='venus-mars' placeholder='Sexo' value={this.state.sexo} style={st.label}
-                                    onChangeText={sexo => this.setState({ sexo })}/> : null}
+                                {this.state.novoUsuario ? <DatePicker date={this.state.dataNascimento} format="YYYY-MM-DD"
+                                    onDateChange={(dataNascimento) => this.setState({ dataNascimento })}
+                                    customStyles={{
+                                        dateIcon: {
+                                            position: 'absolute',
+                                            left: 0,
+                                            top: 4,
+                                            marginLeft: 0
+                                        },
+                                        dateInput: {
+                                            marginTop: 4,
+                                            marginLeft: 36
+                                        }
+                                    }}/> : null}
+                                {/* {this.state.novoUsuario ? <Input icon='birthday-cake' placeholder='Data de Nascimento' value={this.state.dataNascimento} style={st.label}
+                                    onChangeText={dataNascimento => this.setState({ dataNascimento })}/> : null} */}
+                                {/* {this.state.novoUsuario ? <Input icon='venus-mars' placeholder='Sexo' value={this.state.sexo} style={st.label}
+                                    onChangeText={sexo => this.setState({ sexo })}/> : null} */}
+                                <Picker
+                                selectedValue={this.state.sexo}
+                                onValueChange={sexo => this.setState({sexo})}
+                                >
+                                    <Picker.Item label="Masculino" value = "Masculino"/>
+                                    <Picker.Item label="Feminino" value = "Feminino"/>
+                                    <Picker.Item label="Outro" value = "Outro"/>
+                                </Picker>
                             </View>
                         </ScrollView> :
                         <View style={{
@@ -105,7 +130,7 @@ export default class Autenticacao extends Component {
                                     if(this.state.novoUsuario){
                                         if(this.state.nome === '' || this.state.email === ''
                                         || this.state.senha === '' || this.state.confirmarSenha === ''
-                                        || this.state.dataNascimento || this.state.sexo === ''){
+                                        || this.state.dataNascimento === '' || this.state.sexo === ''){
                                             ToastAndroid.show('Preencha todos os campos!', ToastAndroid.LONG)
                                             return 0
                                         }
@@ -146,11 +171,13 @@ async function buscar(email, senha){
         const response = await axios.get(url);
         console.log(response.data);
         let usuario = response.data.filter(objeto => objeto["email"] === email && objeto["senha"] === senha)
-        console.log(usuario)
-        // if(usuario == null)
-        //     console.log('nao achou :/')
-        // else
-        //     console.log('achou!')
+        console.log(usuario.length)
+        if(usuario.length == 0)
+            ToastAndroid.show('Email ou senha incorretos!', ToastAndroid.LONG)
+            //console.log('nao achou :/')
+        else
+            ToastAndroid.show('Usuário encontrado!', ToastAndroid.LONG)
+            // console.log('achou!')
     } catch (error) {
         console.error(error);
     }
