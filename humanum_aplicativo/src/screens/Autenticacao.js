@@ -141,6 +141,7 @@ export default class Autenticacao extends Component {
                                     }
                                     else{
                                         buscar(this.state.email, this.state.senha)
+                                        this.props.navigation.push("Home")
                                     }
                                 }
                             }>
