@@ -52,7 +52,7 @@ const AuthNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{headerShown: false}}>
             {/*<Stack.Screen name="Splash" component={AuthOrApp} />*/}
-            <Stack.Screen name="Autenticacao"      component={Autenticacao} />
+            <Stack.Screen name="Autenticacao"      component={Inicial} />
             <Stack.Screen name="Home"      component={DrawerNavigator} />
         </Stack.Navigator>
     )
