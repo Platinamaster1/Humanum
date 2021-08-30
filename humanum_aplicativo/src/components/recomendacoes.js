@@ -4,7 +4,7 @@ import { Text } from 'react-native';
 import axios from 'react-native-axios'
 
 export default props => {
-    const [data, setData] = useState(0)
+    const [data, setData] = useState([])
     // const getTextos = async() => {
     //     console.log('aaaaaaaaaaaaa' + props.genero)
     //     var url = 'http://192.168.15.7:3002/textos/categoria/' + props.genero
@@ -25,8 +25,14 @@ export default props => {
     //     }
     // }
 
-    const teste = (genero) => {
-        buscar(genero)
+    var jooj
+    const setJooj = (dados) => {
+        jooj = dados
+        console.log(jooj)
+    }
+
+    const teste = (genero, set) => {
+        buscar(genero, set)
         // var url = 'http://192.168.15.7:3002/textos/categoria/' + props.genero
         // const response = await axios.get(url);
         // var textos = response.data
@@ -35,15 +41,16 @@ export default props => {
     }
 
     return (
-        <Text>teste: {props.genero? teste(props.genero): console.log("b")}</Text>
+        <Text>teste: {props.genero? teste(props.genero, setJooj): console.log("b")}</Text>
     )
 }
 
-async function buscar(genero) {
+async function buscar(genero, set) {
     // try{
         var url = 'http://192.168.15.7:3002/textos/categoria/' + genero
         const response = await axios.get(url);
         var textos = response.data
+        set(textos)
         console.log(textos)
         // var textosRandom = []
         // var i
