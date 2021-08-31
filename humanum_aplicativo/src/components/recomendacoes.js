@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import { Component } from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import axios from 'react-native-axios'
 
+function useForceUpdate(){
+    const [value, setValue] = useState(0); // integer state
+    return () => setValue(value => value + 1); // update the state to force render
+}
+
 export default props => {
-    const [data, setData] = useState([])
     // const getTextos = async() => {
     //     console.log('aaaaaaaaaaaaa' + props.genero)
     //     var url = 'http://192.168.15.7:3002/textos/categoria/' + props.genero
@@ -25,14 +29,19 @@ export default props => {
     //     }
     // }
 
-    var jooj
-    const setJooj = (dados) => {
-        jooj = dados
-        console.log(jooj)
+    var exibicao = (<Text>a</Text>)
+    var obras
+    const setDados = (dados) => {
+        obras = dados
+        console.log(obras)
+        for(var i = 0; i < obras.length; i++){
+            exibicao += (<Text>{obras[i]}</Text>)
+        }
     }
 
-    const teste = (genero, set) => {
+    const search = (genero, set) => {
         buscar(genero, set)
+        //console.log(obras)
         // var url = 'http://192.168.15.7:3002/textos/categoria/' + props.genero
         // const response = await axios.get(url);
         // var textos = response.data
@@ -41,7 +50,10 @@ export default props => {
     }
 
     return (
-        <Text>teste: {props.genero? teste(props.genero, setJooj): console.log("b")}</Text>
+        <View>
+            <Text>teste: {props.genero? search(props.genero, setDados): console.log("b")}</Text>
+            <View>{obras? obras: console.log(obras)}</View>
+        </View>
     )
 }
 
@@ -51,7 +63,7 @@ async function buscar(genero, set) {
         const response = await axios.get(url);
         var textos = response.data
         set(textos)
-        console.log(textos)
+        //console.log(textos)
         // var textosRandom = []
         // var i
         // textos.length > 1 ? i = Math.floor(textos.length / 2) : i = 1
