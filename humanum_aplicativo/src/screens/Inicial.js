@@ -24,8 +24,8 @@ export default class Inicial extends Component {
     render() {
         //console.log(categorias)
         return (
-            <View style={st.container}>
-                <ScrollView>
+            // <View style={st.container}>
+                <ScrollView style={st.container}>
                     {/* <Text style={st.texto}>teste</Text> */}
                     <Recomendacoes genero={this.state.data[0]}/>
                     {/* {console.log(this.state.data)} */}
@@ -35,7 +35,7 @@ export default class Inicial extends Component {
                     <Recomendacoes genero={this.state.data[4]}/>
                     {/* <Text>{this.state.data}</Text> */}
                 </ScrollView>
-            </View>
+            // </View>
         )
     }
 }
