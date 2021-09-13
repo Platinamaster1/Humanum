@@ -29,10 +29,10 @@ export default class Inicial extends Component {
                     {/* <Text style={st.texto}>teste</Text> */}
                     <Recomendacoes genero={this.state.data[0]}/>
                     {/* {console.log(this.state.data)} */}
-                    {/* <Recomendacoes genero={this.state.data[1]}/>
+                    <Recomendacoes genero={this.state.data[1]}/>
                     <Recomendacoes genero={this.state.data[2]}/>
                     <Recomendacoes genero={this.state.data[3]}/>
-                    <Recomendacoes genero={this.state.data[4]}/> */}
+                    <Recomendacoes genero={this.state.data[4]}/>
                     {/* <Text>{this.state.data}</Text> */}
                 </ScrollView>
             </View>
@@ -83,12 +83,12 @@ async function buscarCategoriasETextos(){
         var i = 5
         while(i--){
             var j = Math.floor(Math.random() * categorias.length)
-            catRandom.push(categorias[j]["id"])
+            catRandom.push(categorias[j])
             categorias.splice(j, 1)
         }
         var ret = []
         const promArr = catRandom.map(async (element) => {
-            const url = 'http://192.168.15.7:3002/textos/categoria/' + element;
+            const url = 'http://192.168.15.7:3002/textos/categoria/' + element["id"];
             const response = await axios.get(url);
             const dado = response.data
             return dado;
