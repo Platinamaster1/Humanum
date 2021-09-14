@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import axios from 'react-native-axios'
 import LivroItem from './livroItem';
+import commonStyles from '../commonStyles'
 
 export default props => {
     const [nomeCategoria, setNomeCategoria] = useState("Categoria")
@@ -29,15 +30,11 @@ export default props => {
     }
     return (
         <View>
-            <Text>{nomeCategoria}</Text>
+            <Text style={styles.nome}>{nomeCategoria}</Text>
             <ScrollView style={styles.container} horizontal={true}>
                 {/* <Text>jooj {console.log(props.genero)}</Text> */}
                 {/* <Text>{props.genero? props.genero[0]["id"]: console.log("ainda n recebi chefe")}</Text> */}
                 {props.genero ? linhaTextos(props.genero) : console.log("ainda n recebi chefe")}
-                <Text>teste</Text>
-                <Text>teste</Text>
-                <Text>teste</Text>
-                <Text>teste</Text>
                 {/* <LivroItem/> */}
             </ScrollView>
         </View>
@@ -47,7 +44,10 @@ export default props => {
 const styles = StyleSheet.create({
     container: {
         margin: 10,
-        backgroundColor: "#dbdbdb",
+        // backgroundColor: "#dbdbdb",
         flexDirection: "row"
+    },
+    nome: {
+        fontFamily: 'commonStyles.fontFamily2'
     }
 })
