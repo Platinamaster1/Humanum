@@ -11,6 +11,7 @@ import Inicial from './screens/Inicial'
 import SplashScreen from './screens/Splash'
 import Autenticacao from './screens/Autenticacao'
 import commonStyles from './commonStyles'
+import Texto from './screens/Texto';
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -24,17 +25,16 @@ const menuConfig = {
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
 
-const DrawerNavigator = props => {
+function DrawerNav() {
     //const {email, name} = props.route.params
     return (
-        <Drawer.Navigator initialRouteName='Inicial' 
+        <Drawer.Navigator initialRouteName="Inicial"
             drawerContentOptions={menuConfig}
             /*drawerContent={(props) => {
                 return <Menu {...props} email={email} name={name}/>
             }}*/>
-            <Drawer.Screen name="Inicial">
-                {props => <Inicial />}
-            </Drawer.Screen>
+            <Drawer.Screen name="Inicial" component={Inicial} />
+            <Drawer.Screen name="Texto" component={Texto} />
             {/*<Drawer.Screen name="Amanhã">
                 {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
             </Drawer.Screen>
@@ -50,16 +50,16 @@ const DrawerNavigator = props => {
 
 const AuthNavigator = () => {
     return (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
             {/*<Stack.Screen name="Splash" component={AuthOrApp} />*/}
-            <Stack.Screen name="Autenticacao"      component={Inicial} />
-            <Stack.Screen name="Home"      component={DrawerNavigator} />
+            <Stack.Screen name="Autenticacao" component={DrawerNav} />
+            <Stack.Screen name="Home" component={DrawerNav} />
         </Stack.Navigator>
     )
 }
 
 const Navigator = () => {
-    return(
+    return (
         <NavigationContainer>
             <AuthNavigator />
         </NavigationContainer>

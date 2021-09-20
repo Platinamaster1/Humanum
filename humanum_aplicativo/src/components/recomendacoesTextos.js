@@ -22,7 +22,7 @@ export default props => {
             //     <Text>GENERO: {genero}</Text>
             // )
             linha.push(
-                <LivroItem key={element["id"]} livro={element} />
+                <LivroItem key={element["id"]} livro={element} navigation={props.navigation} />
             )
         });
         // console.log(linha)

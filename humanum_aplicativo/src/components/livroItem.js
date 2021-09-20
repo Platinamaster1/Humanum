@@ -1,17 +1,25 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Component } from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import axios from 'react-native-axios'
 
 export default props => {
-    return(
-        <View style={styles.container}>
-            {/* <Text>teste</Text> */}
-            {console.log(props.livro)}
-            {props.livro["capa"]? 
-            (<Image style={styles.livro} source={{uri: props.livro["capa"]}}/>): 
-            (<Text>{props.livro["nome"]}</Text>)}
-        </View>
+    return (
+        <TouchableOpacity 
+            onPress={() => {
+                const texto = props.livro
+                // console.log(texto)
+                props.navigation.navigate('Texto', {texto: texto})
+                // console.log(props.livro)
+            }}>
+            <View style={styles.container}>
+                {/* <Text>teste</Text> */}
+                {/* {console.log(props.livro)} */}
+                {props.livro["capa"] ?
+                    (<Image style={styles.livro} source={{ uri: props.livro["capa"] }} />) :
+                    (<Text>{props.livro["nome"]}</Text>)}
+            </View>
+        </TouchableOpacity>
     )
 }
 

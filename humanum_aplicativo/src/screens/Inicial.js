@@ -27,12 +27,12 @@ export default class Inicial extends Component {
             // <View style={st.container}>
                 <ScrollView style={st.container}>
                     {/* <Text style={st.texto}>teste</Text> */}
-                    <Recomendacoes genero={this.state.data[0]}/>
+                    <Recomendacoes genero={this.state.data[0]} navigation={this.props.navigation}/>
                     {/* {console.log(this.state.data)} */}
-                    <Recomendacoes genero={this.state.data[1]}/>
-                    <Recomendacoes genero={this.state.data[2]}/>
-                    <Recomendacoes genero={this.state.data[3]}/>
-                    <Recomendacoes genero={this.state.data[4]}/>
+                    <Recomendacoes genero={this.state.data[1]} navigation={this.props.navigation}/>
+                    <Recomendacoes genero={this.state.data[2]} navigation={this.props.navigation}/>
+                    <Recomendacoes genero={this.state.data[3]} navigation={this.props.navigation}/>
+                    <Recomendacoes genero={this.state.data[4]} navigation={this.props.navigation}/>
                     {/* <Text>{this.state.data}</Text> */}
                 </ScrollView>
             // </View>
