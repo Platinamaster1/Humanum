@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { Text, View, StyleSheet, Image, ScrollView } from 'react-native';
 import axios from 'react-native-axios'
 import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
+import Texto from '../components/texto'
 
 export default props => {
     const {texto} = props.route.params
@@ -29,7 +30,7 @@ export default props => {
         getCategoria(data.categoria)
         getAutor(data.idautor)
         // console.log("olha os props aqui o -> " + props)
-        return (<Text>salve</Text>)
+        // return (<Text>{"\n"}</Text>)
     }
     return(
         <ScrollView>
@@ -43,6 +44,7 @@ export default props => {
             <Text>Autor: </Text><Text>{autor} {"\n"}</Text>
             <Text>Ano: </Text><Text>{texto["ano"]} {"\n"}</Text>
             <Text>Categoria: </Text><Text>{categoria + ", " + texto["generoassunto"]} {"\n"}</Text>
+            <Texto/>
         </ScrollView>
     )
 }
