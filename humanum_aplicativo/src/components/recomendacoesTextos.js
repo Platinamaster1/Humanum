@@ -48,6 +48,8 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     nome: {
-        fontFamily: 'commonStyles.fontFamily2'
+        fontFamily: 'commonStyles.fontFamily2',
+        marginLeft: 12,
+        fontSize: 18
     }
 })

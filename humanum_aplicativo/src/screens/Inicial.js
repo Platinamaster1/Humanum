@@ -32,7 +32,7 @@ export default class Inicial extends Component {
                     <Recomendacoes genero={this.state.data[1]} navigation={this.props.navigation}/>
                     <Recomendacoes genero={this.state.data[2]} navigation={this.props.navigation}/>
                     <Recomendacoes genero={this.state.data[3]} navigation={this.props.navigation}/>
-                    <Recomendacoes genero={this.state.data[4]} navigation={this.props.navigation}/>
+                    {/* <Recomendacoes genero={this.state.data[4]} navigation={this.props.navigation}/> */}
                     {/* <Text>{this.state.data}</Text> */}
                 </ScrollView>
             // </View>
@@ -80,7 +80,7 @@ async function buscarCategoriasETextos(){
         const response = await axios.get(url);
         var categorias = response.data
         var catRandom = []
-        var i = 5
+        var i = 4  // mudar pra 5 depois
         while(i--){
             var j = Math.floor(Math.random() * categorias.length)
             catRandom.push(categorias[j])
