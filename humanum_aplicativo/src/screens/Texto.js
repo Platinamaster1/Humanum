@@ -44,7 +44,7 @@ export default props => {
             <Text>Autor: </Text><Text>{autor} {"\n"}</Text>
             <Text>Ano: </Text><Text>{texto["ano"]} {"\n"}</Text>
             <Text>Categoria: </Text><Text>{categoria + ", " + texto["generoassunto"]} {"\n"}</Text>
-            <Texto/>
+            <Texto texto={texto}/>
         </ScrollView>
     )
 }
