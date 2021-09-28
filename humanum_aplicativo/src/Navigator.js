@@ -12,6 +12,7 @@ import SplashScreen from './screens/Splash'
 import Autenticacao from './screens/Autenticacao'
 import commonStyles from './commonStyles'
 import Texto from './screens/Texto';
+import TelaDePerfil from './screens/TelaDePerfil'
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -35,6 +36,7 @@ function DrawerNav() {
             }}*/>
             <Drawer.Screen name="Inicial" component={Inicial} />
             <Drawer.Screen name="Texto" component={Texto} />
+            <Drawer.Screen name="Perfil" component={TelaDePerfil} />
             {/*<Drawer.Screen name="Amanhã">
                 {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
             </Drawer.Screen>
