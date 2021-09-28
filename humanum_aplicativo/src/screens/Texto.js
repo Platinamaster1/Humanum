@@ -1,19 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import { Component } from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, Dimensions, BackHandler } from 'react-native';
 import axios from 'react-native-axios'
 import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 import Texto from '../components/texto'
 import Paragrafo from '../components/paragrafo'
 import commonStyles from '../commonStyles';
+import {useFocusEffect} from '@react-navigation/native'
 
 export default React.memo(props => {
     const { texto } = props.route.params
+    // console.log(texto)
     var jaFoi = 0
     // console.log(texto)
     const [categoria, setCategoria] = useState("Categoria")
     const [autor, setAutor] = useState("Autor")
     const [paragrafos, setParagrafos] = useState([])
+    // useEffect(() => {
+    //     setParagrafos([])
+    // }, [])
+    function zerar() {
+        console.log("oi")
+        setParagrafos([])
+    }
+    useEffect(() => {
+        BackHandler.addEventListener('zerarParagrafos', zerar);
+        return () => {
+            BackHandler.removeEventListener('zerarParagrafos', zerar);
+        };
+    }, []);
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         console.log("entrei")
+    //         // setParagrafos([])
+    //         console.log("texto -> " + texto.nome)
+    //         fazerTudo(props.route.params.texto)
+    //         return () => {
+    //             console.log("sai")
+    //             setParagrafos([])
+    //         }
+    //     }, [])
+    // )
     getCategoria = async (id) => {
         const res = await axios.get('http://192.168.15.7:3002/categorias/' + id)
         const dado = JSON.stringify(res.data);
@@ -29,10 +56,11 @@ export default React.memo(props => {
         setAutor(teste[0].nome)
     }
     getParagrafos = async (documento) => {
+        // console.log("documento -> " + documento)
         var arr
         // console.log(documento)
-        // var url = "https://pastebin.com/raw/" + documento  // ateneu
-        var url = "https://pastebin.com/raw/iRAHB6K5"
+        var url = "https://pastebin.com/raw/" + documento  // ateneu
+        // var url = "https://pastebin.com/raw/iRAHB6K5"
 
         await axios.get(url)
             .then(response => response.data.split("\r\n"))
@@ -47,7 +75,7 @@ export default React.memo(props => {
         // if (jaFoi == 0) {
         arr.forEach(element => {
             if (paragrafos.length < arr.length) {
-                paragrafos.push(<Paragrafo key={i} indice={i} conteudo={element}/>)
+                paragrafos.push(<Paragrafo key={i} indice={i} conteudo={element} />)
                 setParagrafos(paragrafos)
                 i++
             }
@@ -56,19 +84,23 @@ export default React.memo(props => {
         i = 0
         // console.log("paragrafos -> " + paragrafos)
         // console.log(arr)
-
+        console.log("tamanho -> " + paragrafos.length)
     }
     fazerTudo = (data) => {
-        // console.log(data)
         // jaFoi++
+        console.log("oi eu to no fazerTudo")
+        console.log(data)
         getCategoria(data.categoria)
         getAutor(data.idautor)
         getParagrafos(data.documento)
-        console.log("tamanho -> " + paragrafos.length)
+        // console.log("tamanho -> " + paragrafos.length)
         // console.log("vez -> " + jaFoi)
         // console.log("olha os props aqui o -> " + props)
         // return (<Text>{"\n"}</Text>)
     }
+
+    // BackHandler.addEventListener('zerarParagrafos', () => {setParagrafos([])});
+
     return (
         <ScrollView>
             {/* {console.log("PARAMETROS -> " + props)} */}
@@ -84,10 +116,11 @@ export default React.memo(props => {
             <Text style={styles.textoLink}>{texto["ano"]} {"\n"}</Text>
             <Text style={styles.texto}>Categoria: </Text>
             <Text style={styles.textoLink}>{categoria + ", " + texto["generoassunto"]} {"\n"}</Text>
-            {texto["capa"]? 
-                <View style={styles.capaEngloba}><Image style={styles.capa} source={{uri: texto["capa"]}}/></View>: 
+            {texto["capa"] ?
+                <View style={styles.capaEngloba}><Image style={styles.capa} source={{ uri: texto["capa"] }} /></View> :
                 console.log()}
-            {texto && paragrafos ? (<Texto texto={texto} paragrafos={paragrafos} />) : console.log("ainda n recebi")}
+            {/* {texto && paragrafos ? (<Texto texto={texto} paragrafos={paragrafos} />) : console.log("ainda n recebi")} */}
+            <Texto texto={texto} paragrafos={paragrafos} />
         </ScrollView>
     )
 })
@@ -112,8 +145,8 @@ const styles = StyleSheet.create({
         // fontWeight: 'bold'
     },
     capa: {
-        width: Dimensions.get('window').width * 3/4,
-        height: Dimensions.get('window').height * 3/4,
+        width: Dimensions.get('window').width * 3 / 4,
+        height: Dimensions.get('window').height * 3 / 4,
     },
     capaEngloba: {
         justifyContent: 'center',
