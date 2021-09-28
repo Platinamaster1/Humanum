@@ -10,7 +10,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 export default React.memo(props => {
     const { texto } = props.route.params
-    // console.log(texto)
+    console.log(texto)
     var jaFoi = 0
     // console.log(texto)
     const [categoria, setCategoria] = useState("Categoria")
@@ -19,28 +19,28 @@ export default React.memo(props => {
     // useEffect(() => {
     //     setParagrafos([])
     // }, [])
-    function zerar() {
-        console.log("oi")
-        setParagrafos([])
-    }
-    useEffect(() => {
-        BackHandler.addEventListener('zerarParagrafos', zerar);
-        return () => {
-            BackHandler.removeEventListener('zerarParagrafos', zerar);
-        };
-    }, []);
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         console.log("entrei")
-    //         // setParagrafos([])
-    //         console.log("texto -> " + texto.nome)
-    //         fazerTudo(props.route.params.texto)
-    //         return () => {
-    //             console.log("sai")
-    //             setParagrafos([])
-    //         }
-    //     }, [])
-    // )
+    // function zerar() {
+    //     console.log("oi")
+    //     setParagrafos([])
+    // }
+    // useEffect(() => {
+    //     BackHandler.addEventListener('zerarParagrafos', zerar);
+    //     return () => {
+    //         BackHandler.removeEventListener('zerarParagrafos', zerar);
+    //     };
+    // }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            console.log("entrei")
+            setParagrafos([])
+            // console.log("texto -> " + texto.nome)
+            // fazerTudo(props.route.params.texto)
+            return () => {
+                console.log("sai")
+                setParagrafos([])
+            }
+        }, [])
+    )
     getCategoria = async (id) => {
         const res = await axios.get('http://192.168.15.7:3002/categorias/' + id)
         const dado = JSON.stringify(res.data);
@@ -89,7 +89,7 @@ export default React.memo(props => {
     fazerTudo = (data) => {
         // jaFoi++
         console.log("oi eu to no fazerTudo")
-        console.log(data)
+        // console.log(data)
         getCategoria(data.categoria)
         getAutor(data.idautor)
         getParagrafos(data.documento)
