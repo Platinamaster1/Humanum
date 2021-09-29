@@ -19,8 +19,12 @@ export default class TelaDePerfil extends Component {
         modoEdicao: false,
         editNome: false,
         editDesc: false,
+        selecionandoImagem: false,
+        filePath: '',
+        fileData: '',
+        fileUri: ''
     }
-    chooseImage = () => {
+    launchCamera = () => {
         let options = {
           title: 'Select Image',
           customButtons: [
@@ -32,6 +36,42 @@ export default class TelaDePerfil extends Component {
           },
         };
         ImagePicker.launchCamera(options, (response) => {
+          console.warn('Response = ', response);
+    
+          if (response.didCancel) {
+            console.warn('User cancelled image picker');
+          } else if (response.error) {
+            console.warn('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.warn('User tapped custom button: ', response.customButton);
+            alert(response.customButton);
+          } else {
+            const source = { uri: response.uri };
+    
+            // You can also display the image using data:
+            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+            // alert(JSON.stringify(response));s
+            console.warn('response', JSON.stringify(response));
+            this.setState({
+              filePath: response,
+              fileData: response.data,
+              fileUri: response.uri
+            });
+          }
+        });
+    }
+    launchGallery = () => {
+        let options = {
+          title: 'Select Image',
+          customButtons: [
+            { name: 'customOptionKey', title: 'Choose Photo from Custom Option' },
+          ],
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        };
+        ImagePicker.launchImageLibrary(options, (response) => {
           console.warn('Response = ', response);
     
           if (response.didCancel) {
@@ -68,7 +108,7 @@ export default class TelaDePerfil extends Component {
                             <Image style={st.imgFundo} source={{uri:this.state.urlFundo}} resizeMode='stretch'/>
                             {this.state.modoEdicao ? 
                             <TouchableOpacity style={[st.iconCam, st.cam1]}
-                                onPress={this.chooseImage}>
+                                onPress={() => {this.setState({ selecionandoImagem: true})}}>
                                 <Icon name='camera' size={25} />
                             </TouchableOpacity>
                             : null}
@@ -77,7 +117,7 @@ export default class TelaDePerfil extends Component {
                             <Image style={st.fotoPerfil} source={{uri:this.state.urlPerfil}}/>
                             {this.state.modoEdicao ? 
                             <TouchableOpacity style={[st.iconCam, st.cam2]}
-                                onPress={this.chooseImage}>
+                                onPress={() => {this.setState({ selecionandoImagem: true})}}>
                                 <Icon name='camera' size={25} />
                             </TouchableOpacity>
                             : null}
@@ -150,9 +190,32 @@ export default class TelaDePerfil extends Component {
                     </View>
                 </View>
                 <View style={st.textosFav}>
-                    <Text style={st.t1}>Textos Favoritos</Text>
+                    <Text style={[st.t1, {marginLeft: 25}]}>Textos Favoritos</Text>
                     <TextosFavoritos />
                 </View>
+                
+                {this.state.selecionandoImagem ?
+                <View style={st.fundoPopUp}>
+                    <View style={st.popup}>
+                        <TouchableOpacity style={st.btnImagePicker}
+                        onPress={() => {
+                            this.setState({ selecionandoImagem: false })
+                            this.launchCamera()
+                        }}>
+                            <Icon name='camera' size={20}/>
+                            <Text>Tire uma Foto!</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={st.btnImagePicker}
+                        onPress={() => {
+                            this.setState({ selecionandoImagem: false })
+                            this.launchGallery()
+                        }}>
+                            <Icon name='image' size={20}/>
+                            <Text>Pegar da Galeria!</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View> : null
+                }
             </>
         )
     }
@@ -232,8 +295,6 @@ const st = StyleSheet.create({
     },
     textosFav: {
         flex: 35,
-        width: dimensions.width,
-        marginLeft: 25,
     },
     btnSalvar: {
         position: 'absolute',
@@ -260,5 +321,32 @@ const st = StyleSheet.create({
     },
     campo: {
         width: dimensions.width/2
+    },
+    fundoPopUp: {
+        position: 'absolute',
+        top: 0,
+        width: dimensions.width,
+        height: dimensions.height,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'gray',
+    },
+    popup: {
+        height: dimensions.height/3,
+        width: dimensions.width/2,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    btnImagePicker: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderWidth: 1,
+        padding: 10,
+        borderRadius: 10,
+        width: dimensions.width/2.3,
+        borderColor: 'black'
     }
 })
