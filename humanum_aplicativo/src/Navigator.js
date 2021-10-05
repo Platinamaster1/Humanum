@@ -35,7 +35,7 @@ function DrawerNav() {
                 return <Menu {...props} email={email} name={name}/>
             }}*/>
             <Drawer.Screen name="Inicial" component={Inicial} />
-            <Drawer.Screen name="Texto" component={Texto} />
+            {/* <Drawer.Screen name="Texto" component={Texto} /> */}
             <Drawer.Screen name="Perfil" component={TelaDePerfil} />
             {/*<Drawer.Screen name="Amanhã">
                 {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
@@ -56,6 +56,7 @@ const AuthNavigator = () => {
             {/*<Stack.Screen name="Splash" component={AuthOrApp} />*/}
             <Stack.Screen name="Autenticacao" component={DrawerNav} />
             <Stack.Screen name="Home" component={DrawerNav} />
+            <Stack.Screen name="Texto" component={Texto} />
         </Stack.Navigator>
     )
 }

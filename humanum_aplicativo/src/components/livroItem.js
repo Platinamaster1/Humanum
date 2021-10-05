@@ -10,7 +10,8 @@ export default props => {
             onPress={() => {
                 const texto = props.livro
                 // console.log(texto)
-                props.navigation.navigate('Texto', {texto: texto})
+                // props.navigation.navigate('Texto', {texto: texto})
+                props.navigation.push('Texto', {texto: texto})
                 // console.log(props.livro)
             }}>
             <View style={styles.container}>

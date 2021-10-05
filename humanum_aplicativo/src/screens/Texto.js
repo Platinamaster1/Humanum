@@ -10,7 +10,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 export default React.memo(props => {
     const { texto } = props.route.params
-    console.log(texto)
+    // console.log(texto)
     var jaFoi = 0
     // console.log(texto)
     const [categoria, setCategoria] = useState("Categoria")
@@ -29,12 +29,23 @@ export default React.memo(props => {
     //         BackHandler.removeEventListener('zerarParagrafos', zerar);
     //     };
     // }, []);
+    // useEffect(() => {
+    //     console.log("entrei")
+    //     setParagrafos([])
+    //     console.log(texto)
+    //     fazerTudo(props.route.params.texto)
+    //     return () => {
+    //         console.log("sai")
+    //         setParagrafos([])
+    //     };
+    // }, []);
     useFocusEffect(
         React.useCallback(() => {
             console.log("entrei")
             setParagrafos([])
             // console.log("texto -> " + texto.nome)
-            // fazerTudo(props.route.params.texto)
+            console.log(texto)
+            fazerTudo(props.route.params.texto)
             return () => {
                 console.log("sai")
                 setParagrafos([])
@@ -75,7 +86,7 @@ export default React.memo(props => {
         // if (jaFoi == 0) {
         arr.forEach(element => {
             if (paragrafos.length < arr.length) {
-                paragrafos.push(<Paragrafo key={i} indice={i} conteudo={element} />)
+                paragrafos.push(<Paragrafo key={i} indice={i} conteudo={element} idTexto={texto.id}/>)
                 setParagrafos(paragrafos)
                 i++
             }
@@ -105,7 +116,7 @@ export default React.memo(props => {
         <ScrollView>
             {/* {console.log("PARAMETROS -> " + props)} */}
             {/* {console.log(texto)} */}
-            {fazerTudo(texto)}
+            {/* {fazerTudo(texto)} */}
             {/* {getCategoria(texto["categoria"])}
             {getAutor(texto["idautor"])} */}
             {/* <Text>salve</Text> */}
