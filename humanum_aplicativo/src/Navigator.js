@@ -13,6 +13,7 @@ import Autenticacao from './screens/Autenticacao'
 import commonStyles from './commonStyles'
 import Texto from './screens/Texto';
 import TelaDePerfil from './screens/TelaDePerfil'
+import Busca from './screens/Busca'
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -37,6 +38,7 @@ function DrawerNav() {
             <Drawer.Screen name="Inicial" component={Inicial} />
             {/* <Drawer.Screen name="Texto" component={Texto} /> */}
             <Drawer.Screen name="Perfil" component={TelaDePerfil} />
+            <Drawer.Screen name="Busca" component={Busca}/>
             {/*<Drawer.Screen name="Amanhã">
                 {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
             </Drawer.Screen>
