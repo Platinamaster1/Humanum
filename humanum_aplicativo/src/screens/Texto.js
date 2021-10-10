@@ -6,9 +6,21 @@ import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio
 import Texto from '../components/texto'
 import Paragrafo from '../components/paragrafo'
 import commonStyles from '../commonStyles';
-import {useFocusEffect} from '@react-navigation/native'
+import { useFocusEffect } from '@react-navigation/native'
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import ScrollToBottom, {useScrollToBottom} from 'react-scroll-to-bottom';
 
 export default React.memo(props => {
+    // const scrollToBottom = useScrollToBottom();
+
+    const TopButtonHandler=()=>{
+        a.scrollTo({ x: 0, y: 0, animated: true });
+    }
+
+    const EndButtonHandler =()=>{
+        a.scrollToEnd({animated:true,duration:3});
+    }
     const { texto } = props.route.params
     // console.log(texto)
     var jaFoi = 0
@@ -16,6 +28,7 @@ export default React.memo(props => {
     const [categoria, setCategoria] = useState("Categoria")
     const [autor, setAutor] = useState("Autor")
     const [paragrafos, setParagrafos] = useState([])
+    const [favorito, setFavorito] = useState(false)
     // useEffect(() => {
     //     setParagrafos([])
     // }, [])
@@ -86,7 +99,7 @@ export default React.memo(props => {
         // if (jaFoi == 0) {
         arr.forEach(element => {
             if (paragrafos.length < arr.length) {
-                paragrafos.push(<Paragrafo key={i} indice={i} conteudo={element} idTexto={texto.id}/>)
+                paragrafos.push(<Paragrafo key={i} indice={i} conteudo={element} idTexto={texto.id} />)
                 setParagrafos(paragrafos)
                 i++
             }
@@ -97,10 +110,38 @@ export default React.memo(props => {
         // console.log(arr)
         console.log("tamanho -> " + paragrafos.length)
     }
+
+    favoritar = async () => {
+        const idusuario = await AsyncStorage.getItem('idLogado')
+        const url = 'http://192.168.15.7:3002/textosfavoritos/' + idusuario + '/' + texto.id
+        await axios.post(url)
+        console.log("foi!")
+        setFavorito(true)
+    }
+
+    desfavoritar = async () => {
+        const idusuario = await AsyncStorage.getItem('idLogado')
+        const url = 'http://192.168.15.7:3002/textosfavoritos/' + idusuario + '/' + texto.id
+        await axios.delete(url)
+        console.log("foi!!!")
+        setFavorito(false)
+    }
+
+    checarFavoritos = async () => {
+        const idusuario = await AsyncStorage.getItem('idLogado')
+        const url = 'http://192.168.15.7:3002/textosfavoritos/' + idusuario + '/' + texto.id
+        const response = await axios.get(url)
+        console.log(response.data)
+        const dados = response.data
+        if(dados.length > 0)
+            setFavorito(true)
+    }
+
     fazerTudo = (data) => {
         // jaFoi++
         console.log("oi eu to no fazerTudo")
         // console.log(data)
+        checarFavoritos()
         getCategoria(data.categoria)
         getAutor(data.idautor)
         getParagrafos(data.documento)
@@ -113,7 +154,19 @@ export default React.memo(props => {
     // BackHandler.addEventListener('zerarParagrafos', () => {setParagrafos([])});
 
     return (
-        <ScrollView>
+        // <ScrollToBottom>
+        
+        <ScrollView ref={ref => {a = this.scrollView = ref }}>
+             <TouchableOpacity style = {styles.gotobottom} onPress={EndButtonHandler} >
+                <View>
+
+                    <Text>
+
+                        Tetstgdeudnhdygtwyhujde                        
+                    </Text>
+                </View>
+
+                </TouchableOpacity> 
             {/* {console.log("PARAMETROS -> " + props)} */}
             {/* {console.log(texto)} */}
             {/* {fazerTudo(texto)} */}
@@ -127,16 +180,56 @@ export default React.memo(props => {
             <Text style={styles.textoLink}>{texto["ano"]} {"\n"}</Text>
             <Text style={styles.texto}>Categoria: </Text>
             <Text style={styles.textoLink}>{categoria + ", " + texto["generoassunto"]} {"\n"}</Text>
+            <View style={styles.center}>
+                <TouchableOpacity style={styles.botao} onPress={() => {
+                    if(favorito)
+                        desfavoritar()
+                    else
+                        favoritar()
+                }} >
+                    {!favorito?
+                        <Text style={styles.txtBotao}>Adicionar{'\n'}aos favoritos</Text>:
+                        <Text style={styles.txtBotao}>Remover{'\n'}dos favoritos</Text>}
+                </TouchableOpacity>
+            </View> 
             {texto["capa"] ?
                 <View style={styles.capaEngloba}><Image style={styles.capa} source={{ uri: texto["capa"] }} /></View> :
                 console.log()}
             {/* {texto && paragrafos ? (<Texto texto={texto} paragrafos={paragrafos} />) : console.log("ainda n recebi")} */}
             <Texto texto={texto} paragrafos={paragrafos} />
+
+            <TouchableOpacity style = {styles.gotobottom} onPress={TopButtonHandler} >
+                <View>
+
+                    <Text>
+WBVYWDUYGVWVGDYGYVTWYG7DYVWBGDVYWBDGH7GV                       
+                    </Text>
+                </View>
+
+                </TouchableOpacity>
+
         </ScrollView>
+        // </ScrollToBottom>
     )
 })
 
 const styles = StyleSheet.create({
+    txtBotao: {
+        fontFamily: commonStyles.fontFamily2,
+        color: 'white',
+        fontSize: 18,
+        textAlign: 'center'
+    },
+    botao: {
+        backgroundColor: '#a90a0a',
+        width: 100,
+        borderRadius: 8,
+        marginBottom: 20
+    },
+    center: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
     titulo: {
         fontFamily: commonStyles.fontFamily2,
         fontSize: 25,
@@ -162,5 +255,8 @@ const styles = StyleSheet.create({
     capaEngloba: {
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    gotobottom: {
+        marginTop: 30
     }
 })

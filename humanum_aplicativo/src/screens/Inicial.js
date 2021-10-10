@@ -4,6 +4,7 @@ import commonStyles from '../commonStyles'
 import Recomendacoes from '../components/recomendacoesTextos'
 import axios from 'react-native-axios'
 import Header from '../Header'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import ListaLivros from '../components/ListaLivros'
 
@@ -16,6 +17,9 @@ export default class Inicial extends Component {
     async componentDidMount() {
         //buscarCategorias().then(result => categorias = result)
         //categorias = await esperarCategorias()
+        const idLogado = '22'
+        await AsyncStorage.setItem('idLogado', idLogado)
+
         buscarCategoriasETextos().then((data) => {
             this.setState({ data })
             // console.log(this.state.data)

@@ -11,7 +11,7 @@ export default props => {
     const [upvotes, setUpvotes] = useState(comentario.upvotes)
     const [downvotes, setDownvotes] = useState(comentario.downvotes)
 
-    console.log(props.jooj + ": upvotes - " + upvotes + " , downvotes - " + downvotes + " Finale: " + comentario)
+    // console.log(props.jooj + ": upvotes - " + upvotes + " , downvotes - " + downvotes + " Finale: " + comentario)
 
 
     upvote = async (votes) => {
@@ -22,7 +22,7 @@ export default props => {
         }
         const response = await axios.put('http://192.168.15.7:3002/comentarios/trecho', dados)
         setUpvotes(upvotes + 1)
-        console.log("IRINEU: " + upvotes)
+        // console.log("IRINEU: " + upvotes)
     }
 
     return (
@@ -31,7 +31,7 @@ export default props => {
             <View style={styles.votes}>
                 <TouchableOpacity onPress={() => {
                     upvote(comentario)
-                    console.log(props.jooj + " | " + upvotes)
+                    // console.log(props.jooj + " | " + upvotes)
                 }}>
                     <Icon name={"arrow-circle-o-up"} size={20} style={styles.icon} />
                 </TouchableOpacity>
