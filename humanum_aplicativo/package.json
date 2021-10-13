@@ -18,6 +18,7 @@
     "react": "17.0.1",
     "react-gapi": "^1.0.0",
     "react-native": "0.64.2",
+    "react-native-action-button": "^2.8.5",
     "react-native-axios": "^0.17.1",
     "react-native-datepicker": "^1.7.2",
     "react-native-elements": "^3.4.2",

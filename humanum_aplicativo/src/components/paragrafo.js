@@ -37,7 +37,7 @@ export default props => {
             if (comentarios.length < dados.length) {
                 var aux = comentarios
                 // aux.push(<Text key={element.id}>{element.conteudo}</Text>)
-                aux.push(<Comentario jooj={i} key={element.id} comentario={element} />)
+                aux.push(<Comentario jooj={i} key={element.id} comentario={element} ehTrecho />)
                 // console.log(aux)
                 setComentarios(aux)
                 i++

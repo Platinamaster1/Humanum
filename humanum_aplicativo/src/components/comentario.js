@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 
 export default props => {
-    const { comentario } = props
+    const { comentario, ehTrecho } = props
     const [upvotes, setUpvotes] = useState(comentario.upvotes)
     const [downvotes, setDownvotes] = useState(comentario.downvotes)
 
@@ -20,7 +20,10 @@ export default props => {
             upvotes: votes.upvotes + 1,
             downvotes: votes.downvotes
         }
-        const response = await axios.put('http://192.168.15.7:3002/comentarios/trecho', dados)
+        if(ehTrecho)
+            var response = await axios.put('http://192.168.15.7:3002/comentarios/trecho', dados)
+        else
+            var response = await axios.put('http://192.168.15.7:3002/comentarios/texto', dados)
         setUpvotes(upvotes + 1)
         // console.log("IRINEU: " + upvotes)
     }
