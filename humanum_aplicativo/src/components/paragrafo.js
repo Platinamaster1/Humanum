@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, Modal, Dimensions, FlatList, ScrollView } from 'react-native';
 import axios from 'react-native-axios'
 import { useGoogleApi } from 'react-gapi'
 import commonStyles from '../commonStyles'
@@ -26,6 +26,10 @@ export default props => {
     }
 
     getComentarios = async () => {
+        // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        // console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+        // console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
+        // console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
         const res = await axios.get('http://192.168.15.7:3002/comentarios/trecho/' + props.idTexto + '/' + props.indice)
         const dados = res.data
         if (dados.length > 0)
@@ -43,6 +47,7 @@ export default props => {
                 i++
             }
         });
+        // setComentarios(dados)
         // console.log(dados)
         // console.log(comentarios)
     }
@@ -54,6 +59,7 @@ export default props => {
 
     return (
         <TouchableOpacity onPress={() => {
+            // getComentarios()
             setModalVisible(true);
             // getComentarios()
             // console.log(comentarios)
@@ -66,10 +72,10 @@ export default props => {
                 <View style={styles.centralizarModal}>
                     <View style={styles.modal}>
                         <Text style={styles.texto}>este é o parágrafo número {props.indice}</Text>
-                        <View>
+                        <ScrollView>
                             {comentarios}
-                            {/* {console.log(comentarios)} */}
-                        </View>
+                        </ScrollView>
+                        {/* <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} ehTrecho />} /> */}
                         <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"comentário"}/>
                         <TouchableOpacity onPress={() => salvarComentario()} style={styles.fecharModal}>
                             <Text style={[styles.fecharModalTexto, styles.texto]}>SALVAR</Text>

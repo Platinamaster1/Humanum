@@ -142,9 +142,10 @@ export default React.memo(props => {
         getCategoria(data.categoria)
         getAutor(data.idautor)
         getParagrafos(data.documento)
+        buscarComentarios()
     }
 
-    buscarComentarios()
+    // buscarComentarios()
 
     return (
         <SafeAreaView style={styles.container}>
@@ -179,7 +180,7 @@ export default React.memo(props => {
                     {/* <View> */}
                         <View style={styles.modal}>
                             <Text style={styles.texto}>oioioiaaaaaaaaaaaaaaaa</Text>
-                            <FlatList data={comentarios} renderItem={({item}) => <Comentario comentario={item} />} />
+                            <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} />} />
                             <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"comentário"} />
                             <TouchableOpacity style={styles.fecharModal}
                                 onPress={() => {

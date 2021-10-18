@@ -10,6 +10,7 @@ export default props => {
     const { comentario, ehTrecho } = props
     const [upvotes, setUpvotes] = useState(comentario.upvotes)
     const [downvotes, setDownvotes] = useState(comentario.downvotes)
+    const [usuario, setUsuario] = useState("")
 
     // console.log(props.jooj + ": upvotes - " + upvotes + " , downvotes - " + downvotes + " Finale: " + comentario)
 
@@ -20,7 +21,7 @@ export default props => {
             upvotes: votes.upvotes + 1,
             downvotes: votes.downvotes
         }
-        if(ehTrecho)
+        if (ehTrecho)
             var response = await axios.put('http://192.168.15.7:3002/comentarios/trecho', dados)
         else
             var response = await axios.put('http://192.168.15.7:3002/comentarios/texto', dados)
@@ -28,8 +29,28 @@ export default props => {
         // console.log("IRINEU: " + upvotes)
     }
 
+    buscarUsuario = async () => {
+        const url = 'http://192.168.15.7:3002/usuarios/id/22'
+        console.log(url)
+        // const res = await axios.get('http://192.168.15.7:3002/usuarios/id/' + comentario.idusuario)
+        const res = await axios.get(url)
+        const dados = res.data
+        setUsuario(dados[0].nome)
+        // axios.get('http://192.168.15.7:3002/usuarios/id/22')
+        // .then((res) => {
+        //     const dados = res.data
+        //     console.log("aaaaaaa " + dados)
+        // })
+        // .catch((error) => {
+        //     console.log("erro -> " + error)
+        // })
+    }
+
+    // buscarUsuario()
+
     return (
         <View>
+            <Text style={styles.texto}>{comentario.nome}</Text>
             <Text style={styles.texto}>{comentario.conteudo}</Text>
             <View style={styles.votes}>
                 <TouchableOpacity onPress={() => {
