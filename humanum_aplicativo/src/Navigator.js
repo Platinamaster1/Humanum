@@ -14,6 +14,8 @@ import commonStyles from './commonStyles'
 import Texto from './screens/Texto';
 import TelaDePerfil from './screens/TelaDePerfil'
 import Busca from './screens/Busca'
+import PerfilOutros from './screens/PerfilOutros';
+import Chat from './screens/Chat'
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -59,6 +61,8 @@ const AuthNavigator = () => {
             <Stack.Screen name="Autenticacao" component={DrawerNav} />
             <Stack.Screen name="Home" component={DrawerNav} />
             <Stack.Screen name="Texto" component={Texto} />
+            <Stack.Screen name="PerfilOutros" component={PerfilOutros} />
+            <Stack.Screen name="Chat" component={Chat} />
         </Stack.Navigator>
     )
 }

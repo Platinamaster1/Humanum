@@ -8,7 +8,9 @@ export default props => {
     const {usuario} = props
     console.log(usuario)
     return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+            props.navigation.push('PerfilOutros', {user: usuario})
+        }}>
             <View style={styles.container}>
                 {usuario.foto? 
                 (<Image style={styles.icone} source={{ uri: usuario.foto }} />): 
