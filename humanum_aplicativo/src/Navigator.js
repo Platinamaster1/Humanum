@@ -16,6 +16,7 @@ import TelaDePerfil from './screens/TelaDePerfil'
 import Busca from './screens/Busca'
 import PerfilOutros from './screens/PerfilOutros';
 import Chat from './screens/Chat'
+import Mensagens from './screens/Mensagens';
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -41,6 +42,7 @@ function DrawerNav() {
             {/* <Drawer.Screen name="Texto" component={Texto} /> */}
             <Drawer.Screen name="Perfil" component={TelaDePerfil} />
             <Drawer.Screen name="Busca" component={Busca}/>
+            <Drawer.Screen name="Mensagens" component={Mensagens}/>
             {/*<Drawer.Screen name="Amanhã">
                 {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
             </Drawer.Screen>
