@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Component } from 'react';
 import { Text, View } from 'react-native';
 import axios from 'react-native-axios'
+import ipconfig from '../ipconfig'
 
 function useForceUpdate(){
     const [value, setValue] = useState(0); // integer state
@@ -59,7 +60,7 @@ export default props => {
 
 async function buscar(genero, set) {
     // try{
-        var url = 'http://192.168.15.7:3002/textos/categoria/' + genero
+        var url = 'http://' + ipconfig.ip + ':3002/textos/categoria/' + genero
         const response = await axios.get(url);
         var textos = response.data
         set(textos)

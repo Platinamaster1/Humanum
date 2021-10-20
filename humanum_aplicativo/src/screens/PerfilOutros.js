@@ -24,7 +24,7 @@ export default props => {
 
                     <TouchableOpacity style={st.icon} onPress={() => {
                         console.log('oi')
-                        props.navigation.push("Chat", {destinatario: user})
+                        props.navigation.push("Chat", {destinatario: user, ehDM: true})
                     }}>
                         <Icon name='envelope' size={30} />
                     </TouchableOpacity>

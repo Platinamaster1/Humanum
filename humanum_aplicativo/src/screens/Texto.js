@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Comentario from '../components/comentario'
+import ipconfig from '../ipconfig'
 
 export default React.memo(props => {
 
@@ -45,13 +46,13 @@ export default React.memo(props => {
         }, [])
     )
     getCategoria = async (id) => {
-        const res = await axios.get('http://192.168.15.7:3002/categorias/' + id)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/categorias/' + id)
         const dado = JSON.stringify(res.data);
         const teste = JSON.parse(dado);
         setCategoria(teste[0].categoria)
     }
     getAutor = async (id) => {
-        const res = await axios.get('http://192.168.15.7:3002/autores/' + id)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/autores/' + id)
         const dado = JSON.stringify(res.data);
         const teste = JSON.parse(dado);
         setAutor(teste[0].nome)
@@ -83,7 +84,7 @@ export default React.memo(props => {
 
     favoritar = async () => {
         const idusuario = await AsyncStorage.getItem('idLogado')
-        const url = 'http://192.168.15.7:3002/textosfavoritos/' + idusuario + '/' + texto.id
+        const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         await axios.post(url)
         console.log("foi!")
         setFavorito(true)
@@ -91,7 +92,7 @@ export default React.memo(props => {
 
     desfavoritar = async () => {
         const idusuario = await AsyncStorage.getItem('idLogado')
-        const url = 'http://192.168.15.7:3002/textosfavoritos/' + idusuario + '/' + texto.id
+        const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         await axios.delete(url)
         console.log("foi!!!")
         setFavorito(false)
@@ -99,7 +100,7 @@ export default React.memo(props => {
 
     checarFavoritos = async () => {
         const idusuario = await AsyncStorage.getItem('idLogado')
-        const url = 'http://192.168.15.7:3002/textosfavoritos/' + idusuario + '/' + texto.id
+        const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         const response = await axios.get(url)
         console.log(response.data)
         const dados = response.data
@@ -108,7 +109,7 @@ export default React.memo(props => {
     }
 
     buscarComentarios = async () => {
-        const res = await axios.get('http://192.168.15.7:3002/comentarios/texto/' + texto.id)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/comentarios/texto/' + texto.id)
         const dados = res.data
         // dados.forEach(element => {
         //     if (comentarios.length < dados.length) {
@@ -132,7 +133,7 @@ export default React.memo(props => {
             downvotes: 0,
             data: new Date().toLocaleString("en-US")
         }
-        const response = await axios.post('http://192.168.15.7:3002/comentarios/texto', dados)
+        const response = await axios.post('http://' + ipconfig.ip + ':3002/comentarios/texto', dados)
         setComentario("")
     }
 

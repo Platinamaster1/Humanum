@@ -5,6 +5,7 @@ import axios from 'react-native-axios'
 import { useGoogleApi } from 'react-gapi'
 import commonStyles from '../commonStyles'
 import Comentario from './comentario'
+import ipconfig from '../ipconfig'
 
 export default props => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -20,7 +21,7 @@ export default props => {
             upvotes: 0,
             downvotes: 0
         }
-        const response = await axios.post('http://192.168.15.7:3002/comentarios/trecho', dados)
+        const response = await axios.post('http://' + ipconfig.ip + ':3002/comentarios/trecho', dados)
         setComentario("")
         // console.log("comentario adicionado")
     }
@@ -30,7 +31,7 @@ export default props => {
         // console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
         // console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
         // console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
-        const res = await axios.get('http://192.168.15.7:3002/comentarios/trecho/' + props.idTexto + '/' + props.indice)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/comentarios/trecho/' + props.idTexto + '/' + props.indice)
         const dados = res.data
         if (dados.length > 0)
             setTemComentario(true)

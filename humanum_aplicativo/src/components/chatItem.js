@@ -5,6 +5,8 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, Modal, Dimensions,
 import axios from 'react-native-axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import commonStyles from '../commonStyles';
+import ipconfig from '../ipconfig'
 
 export default props => {
     const { chat } = props
@@ -13,22 +15,39 @@ export default props => {
     useState(async () => {
         const idusuario = await AsyncStorage.getItem('idLogado')
         const iddestinatario = (chat.idusuario1 == idusuario ? chat.idusuario2 : chat.idusuario1)
-        const res = await axios.get('http://192.168.15.7:3002/usuarios/id/' + iddestinatario)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/usuarios/id/' + iddestinatario)
         const dados = res.data
         setDestinatario(dados[0])
     })
 
     return (
-        <View>
-            <View style={styles.horizontal}>
-                <Image style={styles.fotoPerfil} source={{ uri: (destinatario.foto ? destinatario.foto : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg') }} />
-                <Text>{destinatario.nome}</Text>
-            </View>
+        <View style={styles.container}>
+            <TouchableOpacity onPress={() => {
+                props.navigation.push('Chat', {destinatario: destinatario, ehDM: true})
+                
+            }}>
+                <View style={styles.horizontal}>
+                    <Image style={styles.fotoPerfil} source={{ uri: (destinatario.foto ? destinatario.foto : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg') }} />
+                    <Text style={styles.texto}>{destinatario.nome}</Text>
+                </View>
+            </TouchableOpacity>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    texto: {
+        fontFamily: commonStyles.fontFamily2,
+        fontSize: 25
+    },
+    container: {
+        paddingTop: 20,
+        paddingBottom: 20,
+        paddingLeft: 10,
+        borderColor: '#c5c5c5',
+        borderTopWidth: 1,
+        borderBottomWidth: 1
+    },
     horizontal: {
         flexDirection: 'row'
     },

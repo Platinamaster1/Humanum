@@ -3,15 +3,23 @@ import { Component } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Modal, Dimensions, FlatList, ScrollView, Image } from 'react-native';
 import axios from 'react-native-axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ipconfig from '../ipconfig'
 
 export default props => {
     const [mensagens, setMensagens] = useState([])
+    const [idUsuario, setIdUsuario] = useState(0)
     const { ehDM, destinatario } = props.route.params
     
     useEffect(async () => {
-        const res = await axios.get('http://192.168.15.7:3002/mensagens/dm/1')
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/1')
         const dados = res.data
         setMensagens(dados)
+    })
+
+    useState(async () => {
+        const id = await AsyncStorage.getItem('idLogado')
+        setIdUsuario(id)
     })
     
     return (
@@ -19,9 +27,14 @@ export default props => {
             <View style={styles.horizontal}>
                 <Icon name='arrow-left' size={20} />
                 <Image source={{ uri: destinatario.foto }} style={styles.foto} />
-                <Text>{!ehDM ? destinatario.nome : null}</Text>
+                <Text>{ehDM ? destinatario.nome : null}</Text>
             </View>
-            <FlatList data={mensagens} renderItem={({ item }) => <Text style={styles.remetente}>{item.texto}</Text>} />
+            <FlatList data={mensagens} renderItem={({ item }) => {
+                if(idUsuario != destinatario.id)
+                    return (<Text style={styles.remetente}>{item.texto}</Text>)
+                else
+                    return (<Text style={styles.destinatario}>{item.texto}</Text>)
+            }} />
             {/* <TextInput /> */}
         </View>
     )

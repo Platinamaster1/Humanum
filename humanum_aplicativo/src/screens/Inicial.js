@@ -5,6 +5,7 @@ import Recomendacoes from '../components/recomendacoesTextos'
 import axios from 'react-native-axios'
 import Header from '../Header'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ipconfig from '../ipconfig'
 
 // import ListaLivros from '../components/ListaLivros'
 
@@ -48,7 +49,7 @@ export default class Inicial extends Component {
 
 async function buscarCategorias() {
     try {
-        var url = 'http://192.168.15.7:3002/categorias'
+        var url = 'http://' + ipconfig.ip + ':3002/categorias'
         const response = await axios.get(url);
         var categorias = response.data
         var catRandom = []
@@ -69,7 +70,7 @@ async function buscarTextos(dados) {
     try {
         var ret = []
         dados.forEach(async (element) => {
-            var url = 'http://192.168.15.7:3002/textos/categoria/' + element
+            var url = 'http://' + ipconfig.ip + ':3002/textos/categoria/' + element
             const response = await axios.get(url);
             ret.push(response.data)
         });
@@ -82,7 +83,7 @@ async function buscarTextos(dados) {
 
 async function buscarCategoriasETextos() {
     try {
-        var url = 'http://192.168.15.7:3002/categorias'
+        var url = 'http://' + ipconfig.ip + ':3002/categorias'
         const response = await axios.get(url);
         var categorias = response.data
         var catRandom = []
@@ -94,7 +95,7 @@ async function buscarCategoriasETextos() {
         }
         var ret = []
         const promArr = catRandom.map(async (element) => {
-            const url = 'http://192.168.15.7:3002/textos/categoria/' + element["id"];
+            const url = 'http://' + ipconfig.ip + ':3002/textos/categoria/' + element["id"];
             const response = await axios.get(url);
             const dado = response.data
             return dado;

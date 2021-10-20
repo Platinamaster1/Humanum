@@ -10,11 +10,7 @@ export default props => {
     const { comentario, ehTrecho } = props
     const [upvotes, setUpvotes] = useState(comentario.upvotes)
     const [downvotes, setDownvotes] = useState(comentario.downvotes)
-    const [usuario, setUsuario] = useState("")
-
-    // console.log(props.jooj + ": upvotes - " + upvotes + " , downvotes - " + downvotes + " Finale: " + comentario)
-
-
+   
     upvote = async (votes) => {
         const dados = {
             id: votes.id,
@@ -26,27 +22,15 @@ export default props => {
         else
             var response = await axios.put('http://192.168.15.7:3002/comentarios/texto', dados)
         setUpvotes(upvotes + 1)
-        // console.log("IRINEU: " + upvotes)
     }
 
     buscarUsuario = async () => {
         const url = 'http://192.168.15.7:3002/usuarios/id/22'
         console.log(url)
-        // const res = await axios.get('http://192.168.15.7:3002/usuarios/id/' + comentario.idusuario)
         const res = await axios.get(url)
         const dados = res.data
         setUsuario(dados[0].nome)
-        // axios.get('http://192.168.15.7:3002/usuarios/id/22')
-        // .then((res) => {
-        //     const dados = res.data
-        //     console.log("aaaaaaa " + dados)
-        // })
-        // .catch((error) => {
-        //     console.log("erro -> " + error)
-        // })
     }
-
-    // buscarUsuario()
 
     return (
         <View>
@@ -55,7 +39,6 @@ export default props => {
             <View style={styles.votes}>
                 <TouchableOpacity onPress={() => {
                     upvote(comentario)
-                    // console.log(props.jooj + " | " + upvotes)
                 }}>
                     <Icon name={"arrow-circle-o-up"} size={20} style={styles.icon} />
                 </TouchableOpacity>

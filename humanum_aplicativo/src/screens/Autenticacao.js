@@ -5,6 +5,7 @@ import Input from '../components/AutenticacaoInputs'
 import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
 import DatePicker from 'react-native-datepicker'
+import ipconfig from '../ipconfig'
 const initialState = {
     nome: '',
     email: '',
@@ -33,7 +34,7 @@ export default class Autenticacao extends Component {
         // console.log('ae')
         var today = new Date()
         var data = today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDay()
-        axios.post('http://192.168.15.7:3002/usuarios', {
+        axios.post('http://' + ipconfig.ip + ':3002/usuarios', {
             nome: this.state.nome,
             email: this.state.email,
             telefone: this.state.telefone,
@@ -168,7 +169,7 @@ export default class Autenticacao extends Component {
 
 async function buscar(email, senha){
     try {
-        var url = 'http://192.168.15.7:3002/usuarios'
+        var url = 'http://' + ipconfig.ip + ':3002/usuarios'
         const response = await axios.get(url);
         console.log(response.data);
         let usuario = response.data.filter(objeto => objeto["email"] === email && objeto["senha"] === senha)

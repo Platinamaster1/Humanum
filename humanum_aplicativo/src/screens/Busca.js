@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from '../Header'
 import LivroItem from '../components/livroItem'
 import UsuarioItem from '../components/usuarioItem'
+import ipconfig from '../ipconfig'
 
 const dimensions = Dimensions.get('window');
 export default props => {
@@ -16,14 +17,14 @@ export default props => {
     const [pesquisando, setPesquisando] = useState(false)
 
     buscarTextos = async (text) => {
-        const res = await axios.get('http://192.168.15.7:3002/textos/nome/' + text)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/textos/nome/' + text)
         const dados = res.data
         // console.log(dados)
         setResultadosTextos(dados)
     }
 
     buscarUsuarios = async (text) => {
-        const res = await axios.get('http://192.168.15.7:3002/usuariosnome/' + text)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/usuariosnome/' + text)
         const dados = res.data
         // console.log(dados)
         setResultadosUsuarios(dados)

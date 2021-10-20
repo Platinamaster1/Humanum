@@ -4,11 +4,12 @@ import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import axios from 'react-native-axios'
 import LivroItem from './livroItem';
 import commonStyles from '../commonStyles'
+import ipconfig from '../ipconfig'
 
 export default props => {
     const [nomeCategoria, setNomeCategoria] = useState("Categoria")
     getCategoria = async (id) => {
-        const res = await axios.get('http://192.168.15.7:3002/categorias/' + id)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/categorias/' + id)
         const dado = res.data
         setNomeCategoria(dado[0]["categoria"])
     }
