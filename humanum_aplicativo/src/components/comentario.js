@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, TextInput, TouchableOpacity, Modal, Dimensions 
 import axios from 'react-native-axios'
 import commonStyles from '../commonStyles'
 import Icon from 'react-native-vector-icons/FontAwesome'
-
+import ipconfig from '../ipconfig'
 
 export default props => {
     const { comentario, ehTrecho } = props
@@ -18,14 +18,14 @@ export default props => {
             downvotes: votes.downvotes
         }
         if (ehTrecho)
-            var response = await axios.put('http://192.168.15.7:3002/comentarios/trecho', dados)
+            var response = await axios.put('http://' + ipconfig.ip + ':3002/comentarios/trecho', dados)
         else
-            var response = await axios.put('http://192.168.15.7:3002/comentarios/texto', dados)
+            var response = await axios.put('http://' + ipconfig.ip + ':3002/comentarios/texto', dados)
         setUpvotes(upvotes + 1)
     }
 
     buscarUsuario = async () => {
-        const url = 'http://192.168.15.7:3002/usuarios/id/22'
+        const url = 'http://' + ipconfig.ip + ':3002/usuarios/id/22'
         console.log(url)
         const res = await axios.get(url)
         const dados = res.data
