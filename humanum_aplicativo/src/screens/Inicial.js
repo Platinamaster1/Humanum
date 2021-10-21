@@ -18,8 +18,8 @@ export default class Inicial extends Component {
     async componentDidMount() {
         //buscarCategorias().then(result => categorias = result)
         //categorias = await esperarCategorias()
-        const idLogado = '22'
-        await AsyncStorage.setItem('idLogado', idLogado)
+        //const idLogado = '22'
+        //await AsyncStorage.setItem('idLogado', idLogado)
 
         buscarCategoriasETextos().then((data) => {
             this.setState({ data })

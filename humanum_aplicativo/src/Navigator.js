@@ -8,7 +8,6 @@ import { NavigationContainer } from '@react-navigation/native';
 // import AuthOrApp from './screens/AuthOrApp'
 // import Menu from './screens/Menu'
 import Inicial from './screens/Inicial'
-import SplashScreen from './screens/Splash'
 import Autenticacao from './screens/Autenticacao'
 import commonStyles from './commonStyles'
 import Texto from './screens/Texto';
@@ -17,6 +16,7 @@ import Busca from './screens/Busca'
 import PerfilOutros from './screens/PerfilOutros';
 import Chat from './screens/Chat'
 import Mensagens from './screens/Mensagens';
+import AutenOuApp from './screens/AutenOuApp'
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -59,8 +59,8 @@ function DrawerNav() {
 const AuthNavigator = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {/*<Stack.Screen name="Splash" component={AuthOrApp} />*/}
-            <Stack.Screen name="Autenticacao" component={DrawerNav} />
+            <Stack.Screen name="Splash" component={AutenOuApp} />
+            <Stack.Screen name="Autenticacao" component={Autenticacao} />
             <Stack.Screen name="Home" component={DrawerNav} />
             <Stack.Screen name="Texto" component={Texto} />
             <Stack.Screen name="PerfilOutros" component={PerfilOutros} />

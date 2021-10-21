@@ -6,6 +6,7 @@ import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
 import DatePicker from 'react-native-datepicker'
 import ipconfig from '../ipconfig'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 const initialState = {
     nome: '',
     email: '',
@@ -34,7 +35,7 @@ export default class Autenticacao extends Component {
         // console.log('ae')
         var today = new Date()
         var data = today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDay()
-        axios.post('http://' + ipconfig.ip + ':3002/usuarios', {
+        let usuarioCadastrado = {
             nome: this.state.nome,
             email: this.state.email,
             telefone: this.state.telefone,
@@ -47,10 +48,14 @@ export default class Autenticacao extends Component {
             moderador: 0,
             datacriacao: data,
             senha: this.state.senha
+        }
+        axios.post('http://' + ipconfig.ip + ':3002/usuarios', {
+            usuarioCadastrado
         })
-        .then(function (response) {
+        .then(async function (response) {
             console.log(response);
             ToastAndroid.show('Usuario cadastrado com sucesso!', ToastAndroid.LONG)
+            await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuarioCadastrado))
         })
           .catch(function (error) {
             console.log(error);
@@ -173,6 +178,7 @@ async function buscar(email, senha){
         const response = await axios.get(url);
         console.log(response.data);
         let usuario = response.data.filter(objeto => objeto["email"] === email && objeto["senha"] === senha)
+        await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuario))
         console.log(usuario.length)
         if(usuario.length == 0)
             ToastAndroid.show('Email ou senha incorretos!', ToastAndroid.LONG)
