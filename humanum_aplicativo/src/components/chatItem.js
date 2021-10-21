@@ -11,10 +11,12 @@ import ipconfig from '../ipconfig'
 export default props => {
     const { chat } = props
     const [destinatario, setDestinatario] = useState([])
+    const [idUsuario, setIdUsuario] = useState(0)
 
     useState(async () => {
-        const idusuario = await AsyncStorage.getItem('idLogado')
-        const iddestinatario = (chat.idusuario1 == idusuario ? chat.idusuario2 : chat.idusuario1)
+        const id = await AsyncStorage.getItem('idLogado')
+        setIdUsuario(id)
+        const iddestinatario = (chat.idusuario1 == id ? chat.idusuario2 : chat.idusuario1)
         const res = await axios.get('http://' + ipconfig.ip + ':3002/usuarios/id/' + iddestinatario)
         const dados = res.data
         setDestinatario(dados[0])
@@ -23,7 +25,12 @@ export default props => {
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={() => {
-                props.navigation.push('Chat', {destinatario: destinatario, ehDM: true})
+                props.navigation.push('Chat', {
+                    destinatario: destinatario, 
+                    ehDM: true, 
+                    idUsuario: idUsuario,
+                    chat: chat
+                })
                 
             }}>
                 <View style={styles.horizontal}>
