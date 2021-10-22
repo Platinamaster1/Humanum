@@ -12,12 +12,14 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import commonStyles from '../commonStyles'
+import ipconfig from '../ipconfig'
 
 export default class AuthOrApp extends Component {
 
     componentDidMount = async () => {
         const dadosUsuarioLogado = await AsyncStorage.getItem('dadosUsuario')
-        
+        buscarCategoriasETextos()
+
         let dadosUsuario = null
 
         try {
@@ -29,7 +31,6 @@ export default class AuthOrApp extends Component {
         }
         if (dadosUsuario /*&& dadosUsuario.token*/) {
             //axios.defaults.headers.common['Authorization'] = `bearer ${userData.token}`
-            console.log("AAAAAAAAAAA")
             this.props.navigation.dispatch(
                 CommonActions.reset({
                     index: 0,
@@ -42,7 +43,6 @@ export default class AuthOrApp extends Component {
                 })
             );
         } else {
-            console.log("BBBBBBBBBBBB")
             this.props.navigation.dispatch(
                 CommonActions.reset({
                     index: 1,
@@ -55,6 +55,7 @@ export default class AuthOrApp extends Component {
                 })
             )
         }
+        
     }
 
     render() {
@@ -65,6 +66,38 @@ export default class AuthOrApp extends Component {
                 <Image style={st.img} source={require('../../assets/splashImage.png')} resizeMode='stretch'/>
             </View>
         )
+    }
+}
+
+async function buscarCategoriasETextos() {
+    try {
+        var url = 'http://' + ipconfig.ip + ':3002/categorias'
+        const response = await axios.get(url);
+        var categorias = response.data
+        var catRandom = []
+        var i = 4  // mudar pra 5 depois
+        while (i--) {
+            var j = Math.floor(Math.random() * categorias.length)
+            catRandom.push(categorias[j])
+            categorias.splice(j, 1)
+        }
+        var ret = []
+        const promArr = catRandom.map(async (element) => {
+            const url = 'http://' + ipconfig.ip + ':3002/textos/categoria/' + element["id"];
+            const response = await axios.get(url);
+            const dado = response.data
+            return dado;
+        });
+        const res = await Promise.all(promArr);
+
+        await AsyncStorage.setItem('livrosRecomendados', JSON.stringify(res))
+        return res;
+        // console.log(ret)
+        // return ret
+        // return catRandom
+    }
+    catch (error) {
+        console.error(error)
     }
 }
 

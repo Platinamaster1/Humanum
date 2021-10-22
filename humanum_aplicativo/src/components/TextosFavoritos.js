@@ -4,6 +4,8 @@ import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
+
+
 export default props => {
     return (
         <View style={st.container}>
@@ -11,6 +13,7 @@ export default props => {
         </View>
     )
 }
+
 
 
 const st = StyleSheet.create({

@@ -5,17 +5,21 @@ import TextosFavoritos from '../components/TextosFavoritos'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Input from '../components/AutenticacaoInputs'
 import * as ImagePicker from 'react-native-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 
 const dimensions = Dimensions.get('window');
 export default class TelaDePerfil extends Component {
+    
     state = {
-        nome: 'Glutão',
-        urlFundo: 'https://media.discordapp.net/attachments/854128061121560626/879775458697297940/unknown-6.png?width=384&height=454',
-        urlPerfil: 'https://media.discordapp.net/attachments/799316157332717621/890331872469602354/unknown.png?width=774&height=454',
-        desc: 'Meu Nome é Glutão e eu gosto de ler',
-        dataCriada: '17/05/2021',
-        pontos: 420,
+        nome: this.props.nome,
+        urlFundo: this.props.banner ? this.props.banner : 'https://i2.wp.com/www.multarte.com.br/wp-content/uploads/2018/12/fundo-cinza-claro5.jpg?resize=696%2C696&ssl=1',
+        urlPerfil: this.props.foto ? this.props.foto : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg',
+        desc: this.props.desc,
+        dataCriada: this.props.data,
+        pontos: this.props.pontos,
+
         modoEdicao: false,
         editNome: false,
         editDesc: false,
@@ -96,10 +100,12 @@ export default class TelaDePerfil extends Component {
           }
         });
     }
-    async componentDidMount() {
+    componentDidMount = async () => {
+        
     }
 
     render() {
+        console.log(this.props.id)
         return (
             <>
                 <View style={st.container}>
@@ -127,6 +133,7 @@ export default class TelaDePerfil extends Component {
                         onPress = {
                             () => {
                                 this.setState({ modoEdicao: true })
+                                console.log(this.props)
                             }
                         }>
                             {!this.state.modoEdicao ? <Icon name='cog' size={30}/> : null}
@@ -191,7 +198,7 @@ export default class TelaDePerfil extends Component {
                 </View>
                 <View style={st.textosFav}>
                     <Text style={[st.t1, {marginLeft: 25}]}>Textos Favoritos</Text>
-                    <TextosFavoritos />
+                    <TextosFavoritos id={this.props.id} />
                 </View>
                 
                 {this.state.selecionandoImagem ?

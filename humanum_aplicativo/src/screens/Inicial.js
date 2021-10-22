@@ -21,10 +21,13 @@ export default class Inicial extends Component {
         //const idLogado = '22'
         //await AsyncStorage.setItem('idLogado', idLogado)
 
-        buscarCategoriasETextos().then((data) => {
+        /*buscarCategoriasETextos().then((data) => {
             this.setState({ data })
             // console.log(this.state.data)
-        })
+        })*/
+        let livrosRecomendados = JSON.parse(await AsyncStorage.getItem('livrosRecomendados'))
+        console.log(livrosRecomendados)
+        this.setState({data: livrosRecomendados})
     }
 
     render() {
@@ -81,7 +84,7 @@ async function buscarTextos(dados) {
     }
 }
 
-async function buscarCategoriasETextos() {
+/*async function buscarCategoriasETextos() {
     try {
         var url = 'http://' + ipconfig.ip + ':3002/categorias'
         const response = await axios.get(url);
@@ -109,7 +112,7 @@ async function buscarCategoriasETextos() {
     catch (error) {
         console.error(error)
     }
-}
+}*/
 
 async function esperarCategorias() {
     var ret = await buscarCategorias()

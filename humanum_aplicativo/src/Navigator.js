@@ -30,8 +30,8 @@ const menuConfig = {
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
 
-function DrawerNav() {
-    //const {email, name} = props.route.params
+const DrawerNav = props => {
+    const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params[0]
     return (
         <Drawer.Navigator initialRouteName="Inicial"
             drawerContentOptions={menuConfig}
@@ -40,7 +40,11 @@ function DrawerNav() {
             }}*/>
             <Drawer.Screen name="Inicial" component={Inicial} />
             {/* <Drawer.Screen name="Texto" component={Texto} /> */}
-            <Drawer.Screen name="Perfil" component={TelaDePerfil} />
+            <Drawer.Screen name="Perfil">
+                {props => <TelaDePerfil {...props} nome={nome} desc={desc}
+                           data={datacriacao} pontos={pontos}
+                           banner={banner} foto={foto} id={id}/>}
+            </Drawer.Screen>
             <Drawer.Screen name="Busca" component={Busca}/>
             <Drawer.Screen name="Mensagens" component={Mensagens}/>
             {/*<Drawer.Screen name="Amanhã">
