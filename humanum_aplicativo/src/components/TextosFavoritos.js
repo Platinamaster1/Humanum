@@ -1,15 +1,28 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import {View, Text, StyleSheet, ScrollView} from 'react-native'
 import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import LivroItem from './livroItem';
+import ipconfig from '../ipconfig'
 
 
 
 export default props => {
+    linhaTextosFavoritos = () => {
+        for(const livro of props.textos) {
+            linha.push(
+                <LivroItem key={livro.id} livro={livro} navigation={props.navigation} />
+            )
+        }
+        console.log(linha)
+        return linha
+    }
     return (
-        <View style={st.container}>
-            <Text>Aqui ficarão os Textos Favoritados pelo Usuário</Text>
+        <View>
+            <ScrollView style={st.container} horizontal={true}>
+                {props.id ? linhaTextosFavoritos() : console.log("ainda n recebi chefe")}
+            </ScrollView>
         </View>
     )
 }
@@ -18,7 +31,7 @@ export default props => {
 
 const st = StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
+        margin: 10,
+        flexDirection: "row"
+    },
 })

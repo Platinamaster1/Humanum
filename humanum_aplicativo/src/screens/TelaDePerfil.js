@@ -19,6 +19,7 @@ export default class TelaDePerfil extends Component {
         desc: this.props.desc,
         dataCriada: this.props.data,
         pontos: this.props.pontos,
+        livrosFav: [],
 
         modoEdicao: false,
         editNome: false,
@@ -104,8 +105,20 @@ export default class TelaDePerfil extends Component {
         
     }
 
+    textosFavoritos = async () => {
+        livros = []
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/textosfavoritos/' + props.id)
+        const dado = res.data
+        for(const livroFav of dado)
+        {
+            const res2 = await axios.get('http://'+ ipconfig.ip + ':3002/textos/' + livroFav.idtexto)
+            const dado2 = res2.data
+            livros.push(dado2)
+        }
+        this.setState({livrosFav: livros})
+    }
+
     render() {
-        console.log(this.props.id)
         return (
             <>
                 <View style={st.container}>
@@ -133,7 +146,6 @@ export default class TelaDePerfil extends Component {
                         onPress = {
                             () => {
                                 this.setState({ modoEdicao: true })
-                                console.log(this.props)
                             }
                         }>
                             {!this.state.modoEdicao ? <Icon name='cog' size={30}/> : null}
@@ -198,7 +210,7 @@ export default class TelaDePerfil extends Component {
                 </View>
                 <View style={st.textosFav}>
                     <Text style={[st.t1, {marginLeft: 25}]}>Textos Favoritos</Text>
-                    <TextosFavoritos id={this.props.id} />
+                    <TextosFavoritos id={this.props.id} textos={this.state.livrosFav} navigation={this.props.navigation}/>
                 </View>
                 
                 {this.state.selecionandoImagem ?

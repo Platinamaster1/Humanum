@@ -26,7 +26,7 @@ export default props => {
                 <LivroItem key={element["id"]} livro={element} navigation={props.navigation} />
             )
         });
-        // console.log(linha)
+        console.log(linha)
         return linha
     }
     return (
