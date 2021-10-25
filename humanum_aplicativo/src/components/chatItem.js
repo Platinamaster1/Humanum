@@ -14,8 +14,8 @@ export default props => {
     const [idUsuario, setIdUsuario] = useState(0)
 
     useState(async () => {
-        const id = await AsyncStorage.getItem('idLogado')
-        setIdUsuario(id)
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        setIdUsuario(dadosuser.id)
         const iddestinatario = (chat.idusuario1 == id ? chat.idusuario2 : chat.idusuario1)
         const res = await axios.get('http://' + ipconfig.ip + ':3002/usuarios/id/' + iddestinatario)
         const dados = res.data

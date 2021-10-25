@@ -31,7 +31,9 @@ const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
 
 const DrawerNav = props => {
-    const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params[0]
+    // console.log(props)
+    // const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params[0]
+    const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
     return (
         <Drawer.Navigator initialRouteName="Inicial"
             drawerContentOptions={menuConfig}

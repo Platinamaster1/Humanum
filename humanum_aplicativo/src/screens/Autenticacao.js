@@ -146,8 +146,9 @@ export default class Autenticacao extends Component {
                                             ToastAndroid.show('Confirme sua senha corretamente!', ToastAndroid.LONG)
                                     }
                                     else{
-                                        buscar(this.state.email, this.state.senha)
-                                        this.props.navigation.push("Home")
+                                        const dados = buscar(this.state.email, this.state.senha)
+                                        if(dados)
+                                            this.props.navigation.push("Home", {dadosusuario: dados})
                                     }
                                 }
                             }>
@@ -174,10 +175,19 @@ export default class Autenticacao extends Component {
 
 async function buscar(email, senha){
     try {
+        console.log(email + " / " + senha)
         var url = 'http://' + ipconfig.ip + ':3002/usuarios'
         const response = await axios.get(url);
-        console.log(response.data);
-        let usuario = response.data.filter(objeto => objeto["email"] === email && objeto["senha"] === senha)
+        const dados = response.data
+        console.log(dados);
+        let usuario = dados.filter(objeto => objeto["email"].trim() === email.trim() && objeto["senha"] === senha)
+        // let usuario = dados.filter(objeto => {
+        //     console.log(objeto.email + ' / ' + email)
+        //     if(objeto.email.localeCompare(email) == 0)
+        //         return true
+        // })
+        console.log('aq é o usuario')
+        console.log(usuario)
         await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuario))
         console.log(usuario.length)
         if(usuario.length == 0)
@@ -186,6 +196,7 @@ async function buscar(email, senha){
         else
             ToastAndroid.show('Usuário encontrado!', ToastAndroid.LONG)
             // console.log('achou!')
+        return dados
     } catch (error) {
         console.error(error);
     }
