@@ -6,6 +6,11 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Input from '../components/AutenticacaoInputs'
 import * as ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import axios from 'react-native-axios'
+import ipconfig from '../ipconfig'
+import LivroItem from '../components/livroItem';
+
+
 
 
 
@@ -102,21 +107,29 @@ export default class TelaDePerfil extends Component {
         });
     }
     componentDidMount = async () => {
-        
-    }
-
-    textosFavoritos = async () => {
+        console.log("Tela de Perfil")
         livros = []
-        const res = await axios.get('http://' + ipconfig.ip + ':3002/textosfavoritos/' + props.id)
+        linha = []
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/textosfavoritos/' + this.props.id)
         const dado = res.data
+
         for(const livroFav of dado)
         {
             const res2 = await axios.get('http://'+ ipconfig.ip + ':3002/textos/' + livroFav.idtexto)
             const dado2 = res2.data
             livros.push(dado2)
         }
-        this.setState({livrosFav: livros})
+
+
+        for(const livro of livros) {
+            linha.push(
+                <LivroItem key={livro[0].id} livro={livro[0]} navigation={this.props.navigation} />
+            )
+        }
+        
+        this.setState({ livrosFav: linha })
     }
+
 
     render() {
         return (
@@ -210,7 +223,9 @@ export default class TelaDePerfil extends Component {
                 </View>
                 <View style={st.textosFav}>
                     <Text style={[st.t1, {marginLeft: 25}]}>Textos Favoritos</Text>
-                    <TextosFavoritos id={this.props.id} textos={this.state.livrosFav} navigation={this.props.navigation}/>
+                    {console.log("---------------------------------------------------------------")}
+                    {console.log(this.state.livrosFav)}
+                    <TextosFavoritos id={this.props.id} textos={this.state.livrosFav ? this.state.livrosFav : []} navigation={this.props.navigation}/>
                 </View>
                 
                 {this.state.selecionandoImagem ?

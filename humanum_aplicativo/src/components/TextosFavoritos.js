@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import {View, Text, StyleSheet, ScrollView} from 'react-native'
 import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
@@ -9,19 +9,19 @@ import ipconfig from '../ipconfig'
 
 
 export default props => {
+    const [livrosFav, setLivros] = useState([])
+    useEffect(() => {
+        console.log("Textos favoritos")
+        console.log(props.textos)
+    })
+
     linhaTextosFavoritos = () => {
-        for(const livro of props.textos) {
-            linha.push(
-                <LivroItem key={livro.id} livro={livro} navigation={props.navigation} />
-            )
-        }
-        console.log(linha)
-        return linha
+        
     }
     return (
         <View>
             <ScrollView style={st.container} horizontal={true}>
-                {props.id ? linhaTextosFavoritos() : console.log("ainda n recebi chefe")}
+                {props.id ? props.textos : console.log("ainda n recebi chefe")}
             </ScrollView>
         </View>
     )
