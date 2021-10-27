@@ -35,7 +35,6 @@ export default class Inicial extends Component {
         return (
             // <View style={st.container}>
             <ScrollView style={st.container}>
-                <Header navigation={this.props.navigation}/>
                 {/* <Text style={st.texto}>teste</Text> */}
                 <Recomendacoes genero={this.state.data[0]} navigation={this.props.navigation} />
                 {/* {console.log(this.state.data)} */}
