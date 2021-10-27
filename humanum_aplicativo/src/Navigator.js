@@ -1,6 +1,7 @@
 import React from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createStackNavigator } from '@react-navigation/stack'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 
 // import TaskList from './screens/TaskList'
@@ -29,26 +30,27 @@ const menuConfig = {
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
+const Tab = createBottomTabNavigator();
 
 const DrawerNav = props => {
     // console.log(props)
     // const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params[0]
     const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
     return (
-        <Drawer.Navigator initialRouteName="Inicial"
-            drawerContentOptions={menuConfig}
+        <Tab.Navigator initialRouteName="Inicial"
+            tabContentOptions={menuConfig}
             /*drawerContent={(props) => {
                 return <Menu {...props} email={email} name={name}/>
             }}*/>
-            <Drawer.Screen name="Inicial" component={Inicial} />
+            <Tab.Screen name="Inicial" component={Inicial} />
             {/* <Drawer.Screen name="Texto" component={Texto} /> */}
-            <Drawer.Screen name="Perfil">
+            <Tab.Screen name="Perfil">
                 {props => <TelaDePerfil {...props} nome={nome} desc={desc}
                            data={datacriacao} pontos={pontos}
                            banner={banner} foto={foto} id={id}/>}
-            </Drawer.Screen>
-            <Drawer.Screen name="Busca" component={Busca}/>
-            <Drawer.Screen name="Mensagens" component={Mensagens}/>
+            </Tab.Screen>
+            <Tab.Screen name="Busca" component={Busca}/>
+            <Tab.Screen name="Mensagens" component={Mensagens}/>
             {/*<Drawer.Screen name="Amanhã">
                 {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
             </Drawer.Screen>
@@ -58,7 +60,7 @@ const DrawerNav = props => {
             <Drawer.Screen name="Este Mês">
                 {props => <TaskList title='Mês' daysAhead={30} {...props}/>}
             </Drawer.Screen>*/}
-        </Drawer.Navigator>
+        </Tab.Navigator>
     )
 }
 
