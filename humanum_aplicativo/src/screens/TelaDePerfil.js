@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react'
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import commonStyles from '../commonStyles'
 import TextosFavoritos from '../components/TextosFavoritos'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -11,6 +11,7 @@ import ipconfig from '../ipconfig'
 import LivroItem from '../components/livroItem';
 import { withNavigationFocus } from "react-navigation";
 import { useFocusEffect } from '@react-navigation/native'
+import Header from '../Header'
 
 const dimensions = Dimensions.get('window');
 export default props => {
@@ -132,7 +133,7 @@ export default props => {
     )
 
     return (
-        <>
+        <ScrollView>
             <View style={st.container}>
                 <View style={st.view1}>
                     <View style={st.viewFundo}>
@@ -249,7 +250,7 @@ export default props => {
                     </View>
                 </View> : null
             }
-        </>
+        </ScrollView>
     )
 
 }

@@ -32,7 +32,6 @@ export default props => {
 
     return (
         <View>
-            <Header navigation={props.navigation} />
             <View style={styles.busca}>
                 <TextInput onChangeText={(data) => {
                     setPesquisando(true)

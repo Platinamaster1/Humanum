@@ -1,4 +1,4 @@
-import { useFocusEffect } from '@react-navigation/core';
+import { useFocusEffect } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { Component } from 'react';
 import { Text, View, StyleSheet, TextInput, TouchableOpacity, Modal, Dimensions, FlatList, ScrollView, Image } from 'react-native';
@@ -12,17 +12,29 @@ import ipconfig from '../ipconfig'
 export default props => {
     const [chats, setChats] = useState([])
 
-    useEffect(async () => {
-        const idusuario = await AsyncStorage.getItem('idLogado')
-        const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/usuario/' + idusuario)
+    // useEffect(() => {
+    //     buscarChats()
+    // })
+
+    useFocusEffect(
+        React.useCallback(() => {
+            buscarChats()
+        }, [])
+    )
+
+    async function buscarChats() {
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        console.log(usuario.id)
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/usuario/' + usuario.id)
         const dados = res.data
+        // console.log(dados)
         setChats(dados)
-    })
+    }
 
     return (
         <View>
-            <Header navigation={props.navigation} />
-            <FlatList data={chats} renderItem={({item}) => <ChatItem chat={item} navigation={props.navigation} />} />
+            <FlatList data={chats} renderItem={({ item }) => <ChatItem chat={item} navigation={props.navigation} />} />
         </View>
     )
 }

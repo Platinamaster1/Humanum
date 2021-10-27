@@ -90,7 +90,7 @@ export default props => {
                     </View>
                 </View>
             </Modal>
-            <View style={styles.container}>
+            <View style={temComentario? [styles.container, styles.backgroundComComentario]: [styles.container, styles.backgroundSemComentario]}>
                 <Text style={styles.texto}>{props.conteudo}</Text>
             </View>
         </TouchableOpacity>
@@ -133,12 +133,17 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     container: {
-        backgroundColor: "#dedede",
         margin: 10,
         borderRadius: 5,
         padding: 4,
         // borderColor: 'black',
         // borderWidth: 2
+    },
+    backgroundSemComentario: {
+        backgroundColor: "#dedede",
+    },
+    backgroundComComentario: {
+        backgroundColor: '#ffd4d4'
     },
     texto: {
         fontFamily: commonStyles.fontFamily2,

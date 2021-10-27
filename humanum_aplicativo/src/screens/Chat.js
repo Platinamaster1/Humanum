@@ -13,11 +13,15 @@ export default props => {
     // const [idUsuario, setIdUsuario] = useState(0)
     const { ehDM, destinatario, idUsuario, chat } = props.route.params
 
-    useEffect(async () => {
+    useEffect(() => {
+        buscarMensagens()
+    })
+
+    async function buscarMensagens() {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/' + chat.id)
         const dados = res.data
         setMensagens(dados)
-    })
+    }
 
     enviarDM = async () => {
         const dados = {
