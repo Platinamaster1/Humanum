@@ -14,7 +14,19 @@ export default props => {
     const [busca, setBusca] = useState("")
     const [resultadosTextos, setResultadosTextos] = useState([])
     const [resultadosUsuarios, setResultadosUsuarios] = useState([])
+    const [textosFundo, setTextosFundo] = useState([])
     const [pesquisando, setPesquisando] = useState(false)
+
+    useEffect(() => {
+        textosIniciais()
+    })
+
+    textosIniciais = async () => {
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/textos/')
+        const dados = res.data
+        // console.log(dados)
+        setTextosFundo(dados)
+    }
 
     buscarTextos = async (text) => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textos/nome/' + text)
@@ -31,43 +43,63 @@ export default props => {
     }
 
     return (
-        <View>
+        <View style={styles.container}>
             <View style={styles.busca}>
+                <Icon name={"search"} size={20} style={styles.icon} />
                 <TextInput onChangeText={(data) => {
-                    setPesquisando(true)
+                    if(data == '')
+                        setPesquisando(false)
+                    else
+                        setPesquisando(true)
+
                     setBusca(data)
                     if(data.length > 0){
                         buscarTextos(data)
                         buscarUsuarios(data)
                     }
-                    // console.log(data)
-                }} value={busca} placeholder={"Digite aqui sua busca..."} style={styles.input}/>
-                <Icon name={"search"} size={20} style={styles.icon} />
+                }} value={busca} placeholder={"Pesquisar"} placeholderTextColor='#000' style={styles.input}/>
             </View>
             <View>
+                {!pesquisando && <FlatList data={textosFundo} 
+                      renderItem={({item}) => <LivroItem key={item.id} livro={item} navigation={props.navigation} />} 
+                      numColumns={3}/>}
                 {pesquisando && <Text style={styles.texto}>TEXTOS</Text>}
-                <FlatList data={resultadosTextos} horizontal={true} renderItem={({item}) => <LivroItem livro={item} navigation={props.navigation} />} />
+                {pesquisando && <FlatList data={resultadosTextos} horizontal={true} renderItem={({item}) => <LivroItem key={item.id} livro={item} navigation={props.navigation} />} />}
                 {pesquisando && <Text style={styles.texto}>USUÁRIOS</Text>}
-                <FlatList data={resultadosUsuarios} horizontal={true} renderItem={({item}) => <UsuarioItem usuario={item} navigation={props.navigation} />} />
+                {pesquisando && <FlatList data={resultadosUsuarios} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} />} />}
             </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        marginRight: 10,
+        marginLeft: 10,
+    },
     busca: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        width: dimensions.width,
-        borderWidth: 1,
-        borderRadius: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginTop: dimensions.height / 18,
+        borderWidth: 2,
+        borderRadius: 20,
+    },
+    input: {
+        flex: 1,
+        color: 'black',
+        fontSize: 18,
     },
     icon: {
         color: '#000',
+        marginRight: 20,
     },
     texto: {
         fontFamily: commonStyles.fontFamily2,
-        fontSize: 20
+        fontSize: 20,
+        marginTop: 10,
+        marginBottom: 5,
     }
 })

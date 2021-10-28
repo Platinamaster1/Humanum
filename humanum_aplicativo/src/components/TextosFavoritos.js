@@ -9,17 +9,12 @@ import ipconfig from '../ipconfig'
 
 
 export default props => {
-    const [livrosFav, setLivros] = useState([])
     useEffect(() => {
         console.log("Textos favoritos")
         console.log(props.textos)
     })
-
-    linhaTextosFavoritos = () => {
-        
-    }
     return (
-        <View>
+        <View style={st.bigContainer}>
             <ScrollView style={st.container} horizontal={true}>
                 {props.id ? props.textos : console.log("ainda n recebi chefe")}
             </ScrollView>
@@ -30,8 +25,13 @@ export default props => {
 
 
 const st = StyleSheet.create({
+    bigContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     container: {
         margin: 10,
-        flexDirection: "row"
+        flexDirection: "row",
     },
 })

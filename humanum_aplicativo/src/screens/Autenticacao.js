@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ToastAndroid, Picker} from 'react-native'
 
-import Input from '../components/AutenticacaoInputs'
+import Input from '../components/autenticacaoInputs'
 import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
 import DatePicker from 'react-native-datepicker'

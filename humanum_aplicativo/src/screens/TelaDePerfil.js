@@ -1,9 +1,9 @@
 import React, { Component, useState } from 'react'
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import commonStyles from '../commonStyles'
-import TextosFavoritos from '../components/TextosFavoritos'
+import TextosFavoritos from '../components/textosFavoritos'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import Input from '../components/AutenticacaoInputs'
+import Input from '../components/autenticacaoInputs'
 import * as ImagePicker from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'react-native-axios'
@@ -223,8 +223,6 @@ export default props => {
             </View>
             <View style={st.textosFav}>
                 <Text style={[st.t1, { marginLeft: 25 }]}>Textos Favoritos</Text>
-                {console.log("---------------------------------------------------------------")}
-                {console.log(livrosFav)}
                 <TextosFavoritos id={props.id} textos={livrosFav ? livrosFav : []} navigation={props.navigation} />
             </View>
 
@@ -257,7 +255,7 @@ export default props => {
 
 const st = StyleSheet.create({
     container: {
-        flex: 65,
+        flex: 75,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -274,7 +272,7 @@ const st = StyleSheet.create({
     },
     icon: {
         position: 'absolute',
-        top: dimensions.height / 3.1,
+        top: dimensions.height / 3.9,
         left: dimensions.width / 1.6
     },
     iconCam: {
@@ -297,8 +295,8 @@ const st = StyleSheet.create({
     },
     view2: {
         flex: 35,
-        width: dimensions.width,
-        marginLeft: 50,
+        marginRight: 10,
+        marginLeft: 10,
         justifyContent: 'space-evenly',
         alignItems: 'flex-start'
     },
@@ -319,6 +317,7 @@ const st = StyleSheet.create({
     },
     viewFoto: {
         justifyContent: 'center',
+        marginTop: -dimensions.height / 8,
     },
     fotoPerfil: {
         width: 130,
@@ -326,7 +325,7 @@ const st = StyleSheet.create({
         borderRadius: 65,
     },
     textosFav: {
-        flex: 35,
+        flex: 25,
     },
     btnSalvar: {
         position: 'absolute',

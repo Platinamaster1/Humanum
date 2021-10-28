@@ -35,9 +35,9 @@ const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator();
 
 const TabNav = props => {
-    // console.log(props)
+    console.log(props.route.params[0])
     // const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params[0]
-    const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
+    const {id, nome, descricao, datacriacao, pontos, banner, foto} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
     return (
         <Tab.Navigator initialRouteName="Inicial"
             //tabContentOptions={menuConfig}
@@ -61,7 +61,8 @@ const TabNav = props => {
                     return <Icon name={iconName} size={size} color={color} />;
                 },
                 tabBarActiveTintColor: '#a90a0a',
-                tabBarInactiveTintColor: 'gray',
+                tabBarInactiveTintColor: 'black',
+                tabBarHideOnKeyboard: true,
                 header: (props) => {
                     return <Header navigation={props.navigation}/>
                 }
@@ -70,11 +71,11 @@ const TabNav = props => {
                 return <Menu {...props} email={email} name={name}/>
             }}*/>
             <Tab.Screen name="Inicial" component={Inicial} />
-            <Tab.Screen name="Busca" component={Busca}/>
+            <Tab.Screen name="Busca" component={Busca} options={{headerShown: false}}/>
             <Tab.Screen name="Mensagens" component={Mensagens} options={{tabBarBadge: 3}}/>
             {/* <Drawer.Screen name="Texto" component={Texto} /> */}
             <Tab.Screen name="Perfil">
-                {props => <TelaDePerfil {...props} nome={nome} desc={desc}
+                {props => <TelaDePerfil {...props} nome={nome} desc={descricao}
                            data={datacriacao} pontos={pontos}
                            banner={banner} foto={foto} id={id}/>}
             </Tab.Screen>
