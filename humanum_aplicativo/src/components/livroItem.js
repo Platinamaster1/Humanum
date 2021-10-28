@@ -5,10 +5,6 @@ import axios from 'react-native-axios'
 import commonStyles from '../commonStyles'
 
 export default props => {
-    useEffect(() => {
-        console.log("LivroItem")
-        console.log(props)
-    })
     return (
         <TouchableOpacity 
             onPress={() => {

@@ -34,7 +34,7 @@ export default props => {
     var obras
     const setDados = (dados) => {
         obras = dados
-        console.log(obras)
+        // console.log(obras)
         for(var i = 0; i < obras.length; i++){
             exibicao += (<Text>{obras[i]}</Text>)
         }
@@ -53,7 +53,7 @@ export default props => {
     return (
         <View>
             <Text>teste: {props.genero? search(props.genero, setDados): console.log("b")}</Text>
-            <View>{obras? obras: console.log(obras)}</View>
+            <View>{obras? obras: null}</View>
         </View>
     )
 }

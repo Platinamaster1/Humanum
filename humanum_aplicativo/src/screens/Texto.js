@@ -84,7 +84,8 @@ export default React.memo(props => {
 
     favoritar = async () => {
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
-        const idusuario = dadosuser.id
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
         const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         await axios.post(url)
         console.log("foi!")
@@ -93,7 +94,8 @@ export default React.memo(props => {
 
     desfavoritar = async () => {
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
-        const idusuario = dadosuser.id
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
         const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         await axios.delete(url)
         console.log("foi!!!")
@@ -102,7 +104,8 @@ export default React.memo(props => {
 
     checarFavoritos = async () => {
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
-        const idusuario = dadosuser.id
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
         const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         const response = await axios.get(url)
         console.log(response.data)
@@ -143,7 +146,7 @@ export default React.memo(props => {
 
     fazerTudo = (data) => {
         console.log("oi eu to no fazerTudo")
-        // checarFavoritos()
+        checarFavoritos()
         getCategoria(data.categoria)
         getAutor(data.idautor)
         getParagrafos(data.documento)

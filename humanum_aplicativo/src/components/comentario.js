@@ -8,10 +8,15 @@ import ipconfig from '../ipconfig'
 
 export default props => {
     const { comentario, ehTrecho } = props
-    const [upvotes, setUpvotes] = useState(comentario.upvotes)
-    const [downvotes, setDownvotes] = useState(comentario.downvotes)
+    const [com, setCom] = useState([])
+    const [upvotes, setUpvotes] = useState(0)
+    const [downvotes, setDownvotes] = useState(0)
    
-    upvote = async (votes) => {
+    upvote = async (votes, func) => {
+        console.log('antes')
+        console.log(votes)
+        console.log('depois')
+        console.log(com)
         const dados = {
             id: votes.id,
             upvotes: votes.upvotes + 1,
@@ -21,7 +26,8 @@ export default props => {
             var response = await axios.put('http://' + ipconfig.ip + ':3002/comentarios/trecho', dados)
         else
             var response = await axios.put('http://' + ipconfig.ip + ':3002/comentarios/texto', dados)
-        setUpvotes(upvotes + 1)
+        // setUpvotes(upvotes + 1)
+        func(upvotes + 1)
     }
 
     buscarUsuario = async () => {
@@ -31,14 +37,24 @@ export default props => {
         const dados = res.data
         setUsuario(dados[0].nome)
     }
+    
+    useEffect(() => {
+        console.log('SAAAAAAAAAAAALVEEEEEEEEEEEEEEEE')
+        setCom(comentario)
+        setUpvotes(com.upvotes)
+        setDownvotes(com.downvotes)
+    })
 
     return (
         <View>
-            <Text style={styles.texto}>{comentario.nome}</Text>
-            <Text style={styles.texto}>{comentario.conteudo}</Text>
+            <Text style={styles.texto}>{com.nome}</Text>
+            <Text style={styles.texto}>{com.conteudo}</Text>
             <View style={styles.votes}>
                 <TouchableOpacity onPress={() => {
-                    upvote(comentario)
+                    mudarUpvote = (val) => {
+                        setUpvotes(val)
+                    }
+                    upvote(com, mudarUpvote)
                 }}>
                     <Icon name={"arrow-circle-o-up"} size={20} style={styles.icon} />
                 </TouchableOpacity>

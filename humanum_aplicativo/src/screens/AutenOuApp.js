@@ -23,7 +23,6 @@ export default class AuthOrApp extends Component {
         let dadosUsuario = null
 
         try {
-            console.log("Data: " + dadosUsuarioLogado)
             dadosUsuario = JSON.parse(dadosUsuarioLogado)
             
         } catch (e) {

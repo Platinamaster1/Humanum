@@ -26,7 +26,6 @@ export default class Inicial extends Component {
             // console.log(this.state.data)
         })*/
         let livrosRecomendados = JSON.parse(await AsyncStorage.getItem('livrosRecomendados'))
-        console.log(livrosRecomendados)
         this.setState({data: livrosRecomendados})
     }
 
