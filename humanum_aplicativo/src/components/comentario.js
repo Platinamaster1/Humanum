@@ -11,15 +11,16 @@ export default props => {
     const [com, setCom] = useState([])
     const [upvotes, setUpvotes] = useState(0)
     const [downvotes, setDownvotes] = useState(0)
+    const [deuUpvote, setDeuUptove] = useState(false)
    
-    upvote = async (votes, func) => {
+    upvote = async (votes, func, jaDeu) => {
         console.log('antes')
         console.log(votes)
         console.log('depois')
         console.log(com)
         const dados = {
             id: votes.id,
-            upvotes: votes.upvotes + 1,
+            upvotes: !jaDeu? votes.upvotes + 1: votes.upvotes,
             downvotes: votes.downvotes
         }
         if (ehTrecho)
@@ -41,9 +42,21 @@ export default props => {
     useEffect(() => {
         console.log('SAAAAAAAAAAAALVEEEEEEEEEEEEEEEE')
         setCom(comentario)
-        setUpvotes(com.upvotes)
+        setUpvotes(!deuUpvote? com.upvotes: com.upvotes + 1)
         setDownvotes(com.downvotes)
     })
+
+    checarUpvote = async () => {
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
+        if(ehTrecho){
+            const dados = {
+
+            }
+            var response = await axios.get('http://' + ipconfig.ip + ':3002/upvote/trecho')
+        }
+    }
 
     return (
         <View>
@@ -54,13 +67,14 @@ export default props => {
                     mudarUpvote = (val) => {
                         setUpvotes(val)
                     }
-                    upvote(com, mudarUpvote)
+                    setDeuUptove(!deuUpvote)
+                    upvote(com, mudarUpvote, deuUpvote)
                 }}>
-                    <Icon name={"arrow-circle-o-up"} size={20} style={styles.icon} />
+                    <Icon name={"arrow-circle-o-up"} size={20} style={!deuUpvote? styles.iconN: styles.iconS} />
                 </TouchableOpacity>
                 <Text style={styles.texto}>{upvotes}</Text>
                 <TouchableOpacity>
-                    <Icon name={"arrow-circle-o-down"} size={20} style={styles.icon} />
+                    <Icon name={"arrow-circle-o-down"} size={20} style={styles.iconN} />
                 </TouchableOpacity>
                 <Text style={styles.texto}>{downvotes}</Text>
             </View>
@@ -69,8 +83,11 @@ export default props => {
 }
 
 const styles = StyleSheet.create({
-    icon: {
+    iconN: {
         color: '#a90a0a'
+    },
+    iconS: {
+        color: '#3da859'
     },
     votes: {
         flexDirection: 'row',
