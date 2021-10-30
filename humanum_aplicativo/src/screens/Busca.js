@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { Component } from 'react';
-import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList, Dimensions, SafeAreaView } from 'react-native';
+import { Text, View, StyleSheet, TextInput, TouchableOpacity, FlatList, Dimensions, SafeAreaView, ScrollView } from 'react-native';
 import axios from 'react-native-axios'
 import commonStyles from '../commonStyles'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -17,9 +18,14 @@ export default props => {
     const [textosFundo, setTextosFundo] = useState([])
     const [pesquisando, setPesquisando] = useState(false)
 
-    useEffect(() => {
-        textosIniciais()
-    })
+    // useEffect(() => {
+    //     textosIniciais()
+    // })
+    useFocusEffect(
+        React.useCallback(() => {
+            textosIniciais()
+        }, [])
+    )
 
     textosIniciais = async () => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textos/')
@@ -61,8 +67,9 @@ export default props => {
             </View>
             <View>
                 {!pesquisando && <FlatList data={textosFundo} 
-                      renderItem={({item}) => <LivroItem key={item.id} livro={item} navigation={props.navigation} />} 
-                      numColumns={3}/>}
+                    renderItem={({item}) => <LivroItem key={item.id} livro={item} navigation={props.navigation} />} 
+                    numColumns={Math.floor(dimensions.width/120)}
+                    />}
                 {pesquisando && <Text style={styles.texto}>TEXTOS</Text>}
                 {pesquisando && <FlatList data={resultadosTextos} horizontal={true} renderItem={({item}) => <LivroItem key={item.id} livro={item} navigation={props.navigation} />} />}
                 {pesquisando && <Text style={styles.texto}>USUÁRIOS</Text>}
@@ -83,7 +90,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingLeft: 20,
         paddingRight: 20,
-        marginTop: dimensions.height / 18,
+        marginTop: 10,
         borderWidth: 2,
         borderRadius: 20,
     },

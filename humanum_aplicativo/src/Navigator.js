@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Text } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import IconBadge from 'react-native-icon-badge';
+
+
+
 
 // import TaskList from './screens/TaskList'
 // import Auth from './screens/Auth'
@@ -30,66 +36,71 @@ const menuConfig = {
     }
 }
 
+
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 const TabNav = props => {
     console.log(props.route.params[0])
-    // const {id, nome, desc, datacriacao, pontos, banner, foto} = props.route.params[0]
+    const [headerShown, setHeaderShown] = useState(true)
     const {id, nome, descricao, datacriacao, pontos, banner, foto} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
     return (
+        <>
+        <Header navigation={props.navigation}/>
         <Tab.Navigator initialRouteName="Inicial"
-            //tabContentOptions={menuConfig}
+            tabBarPosition={'bottom'}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color, size }) => {     
-                    let iconName 
+                    let iconName
+                    let mensagens
                     if (route.name === 'Inicial') {
                         iconName = 'home'
+                        mensagens = '0'
                     } 
                     else if (route.name === 'Busca') {
                         iconName = 'search'
+                        mensagens = '0'
                     }
                     else if (route.name === 'Mensagens') {
                         iconName = 'comments'
+                        mensagens = '99+'
                     }
                     else if (route.name === 'Perfil') {
                         iconName = 'user'
+                        mensagens = '0'
                     }
       
                     // You can return any component that you like here!
-                    return <Icon name={iconName} size={size} color={color} />;
+                    //return <Icon name={iconName} size={20} color={color} />;
+                    return<IconBadge
+                        MainElement={<Icon name={iconName} size={20} color={color} />}
+                        BadgeElement={<Text style={{ color: 'white', fontSize: 9 }}>{mensagens}</Text>}
+                        IconBadgeStyle={{
+                            backgroundColor: '#a90a0a',
+                            top: -10,
+                            right: -15,
+                        }}
+                        Hidden={mensagens === '0'}
+                    />
                 },
                 tabBarActiveTintColor: '#a90a0a',
                 tabBarInactiveTintColor: 'black',
-                tabBarHideOnKeyboard: true,
-                header: (props) => {
-                    return <Header navigation={props.navigation}/>
-                }
-            })}
-            /*drawerContent={(props) => {
-                return <Menu {...props} email={email} name={name}/>
-            }}*/>
+                tabBarShowLabel: false,
+                swipeEnabled: true,
+                tabBarIconStyle: {alignItems: 'center', justifyContent: 'center'},
+                tabBarIndicatorStyle: {borderColor: '#a90a0a', borderWidth: 1},
+            })}>
             <Tab.Screen name="Inicial" component={Inicial} />
             <Tab.Screen name="Busca" component={Busca} options={{headerShown: false}}/>
-            <Tab.Screen name="Mensagens" component={Mensagens} options={{tabBarBadge: 3}}/>
-            {/* <Drawer.Screen name="Texto" component={Texto} /> */}
+            <Tab.Screen name="Mensagens" component={Mensagens} /*options={{tabBarBadge: 3}}*//>
             <Tab.Screen name="Perfil">
                 {props => <TelaDePerfil {...props} nome={nome} desc={descricao}
                            data={datacriacao} pontos={pontos}
                            banner={banner} foto={foto} id={id}/>}
             </Tab.Screen>
-            
-            {/*<Drawer.Screen name="Amanhã">
-                {props => <TaskList title='Amanhã' daysAhead={1} {...props}/>}
-            </Drawer.Screen>
-            <Drawer.Screen name="Esta Semana">
-                {props => <TaskList title='Semana' daysAhead={7} {...props}/>}
-            </Drawer.Screen>
-            <Drawer.Screen name="Este Mês">
-                {props => <TaskList title='Mês' daysAhead={30} {...props}/>}
-            </Drawer.Screen>*/}
         </Tab.Navigator>
+        </>
     )
 }
 

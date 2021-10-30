@@ -4,8 +4,11 @@
  *
  * @format
  */
-
 module.exports = {
+  resolver: {
+    sourceExts: ['jsx', 'js', 'ts', 'tsx', 'map'],
+  },
+  maxWorkers: 2,
   transformer: {
     getTransformOptions: async () => ({
       transform: {
