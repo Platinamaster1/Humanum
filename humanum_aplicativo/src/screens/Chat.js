@@ -21,6 +21,16 @@ export default props => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/' + chat.id)
         const dados = res.data
         setMensagens(dados)
+        mensagens.forEach(async (mensagem) => {
+            if(!mensagem.visualizado && mensagem.idusuarioremetente != idUsuario) {
+                console.log(mensagem.texto)
+                const info = {
+                    id: mensagem.id,
+                    visualizado: true
+                }
+                const res = await axios.put('http://' + ipconfig.ip + ':3002/mensagens/dm', info)
+            }
+        });
     }
 
     enviarDM = async () => {
@@ -29,7 +39,8 @@ export default props => {
             texto: mensagem,
             data: new Date(),
             idusuarioremetente: idUsuario,
-            idusuariodestinatario: destinatario.id
+            idusuariodestinatario: destinatario.id,
+            visualizado: false
         }
         const res = await axios.post('http://' + ipconfig.ip + ':3002/mensagens/dm', dados)
     }
