@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Input from '../components/autenticacaoInputs'
 import * as ImagePicker from 'react-native-image-picker';
 import LivroItem from '../components/livroItem'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native'
 import axios from 'react-native-axios'
 import ipconfig from '../ipconfig'
@@ -49,6 +49,21 @@ export default props => {
         }, [])
     )
 
+    criarDM = async () => {
+        console.log('oi')
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
+        const dados = {
+            idusuario1: idusuario,
+            idusuario2: user.id
+        }
+        const res = await axios.post('http://' + ipconfig.ip + ':3002/mensagens/criardm', dados)
+        const res2 = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/buscardm/' + idusuario + '/' + user.id)
+        const dados2 = res2.data
+        props.navigation.push("Chat", {destinatario: user, ehDM: true, chat: dados2[0]})
+    }
+
     return (
         <>
             <View style={st.container}>
@@ -60,10 +75,7 @@ export default props => {
                         <Image style={st.fotoPerfil} source={{ uri: user.foto }} />
                     </View>
 
-                    <TouchableOpacity style={st.icon} onPress={() => {
-                        console.log('oi')
-                        props.navigation.push("Chat", {destinatario: user, ehDM: true})
-                    }}>
+                    <TouchableOpacity style={st.icon} onPress={criarDM}>
                         <Icon name='envelope' size={30} />
                     </TouchableOpacity>
 

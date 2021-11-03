@@ -6,12 +6,14 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ipconfig from '../ipconfig'
 import commonStyles from '../commonStyles';
+import { useFocusEffect } from '@react-navigation/native'
 
 export default props => {
     const [mensagens, setMensagens] = useState([])
     const [mensagem, setMensagem] = useState('')
     // const [idUsuario, setIdUsuario] = useState(0)
     const { ehDM, destinatario, idUsuario, chat } = props.route.params
+    const [primeiro, setPrimeiro] = useState(0)
 
     useEffect(() => {
         buscarMensagens()
@@ -31,6 +33,9 @@ export default props => {
                 const res = await axios.put('http://' + ipconfig.ip + ':3002/mensagens/dm', info)
             }
         });
+        if(primeiro == 0)
+            navegar.scrollToEnd({ animated: true, duration: 3 });
+        setPrimeiro(1)
     }
 
     enviarDM = async () => {
@@ -43,6 +48,14 @@ export default props => {
             visualizado: false
         }
         const res = await axios.post('http://' + ipconfig.ip + ':3002/mensagens/dm', dados)
+        setMensagem('')
+        setPrimeiro(0)
+    }
+
+    formatarData = (d) => {
+        var date = new Date(d)
+        var data = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()
+        return data
     }
 
     // useState(async () => {
@@ -63,10 +76,20 @@ export default props => {
             </View>
             <FlatList data={mensagens} renderItem={({ item }) => {
                 if (idUsuario != item.idusuariodestinatario)
-                    return (<Text style={styles.remetente}>{item.texto + " (" + item.data + ") "}</Text>)
+                    return (
+                        <View style={styles.remetente}>
+                            <Text>{item.texto}</Text>
+                            <Text style={styles.txtDataR}>{formatarData(item.data)}</Text>
+                        </View>
+                    )
                 else
-                    return (<Text style={styles.destinatario}>{item.texto + " (" + item.data + ") "}</Text>)
-            }} />
+                    return (
+                        <View style={styles.destinatario}>
+                            <Text>{item.texto}</Text>
+                            <Text style={styles.txtDataD}>{formatarData(item.data)}</Text>
+                        </View>
+                    )
+            }} ref={ref => { navegar = ref }} />
             <View style={styles.horizontalEmbaixo}>
                 <TextInput value={mensagem} onChangeText={(msg) => setMensagem(msg)} style={styles.txtmsg} placeholder={'Mensagem'} />
                 <TouchableOpacity style={styles.btnenviarDM} onPress={enviarDM}>
@@ -79,6 +102,14 @@ export default props => {
 }
 
 const styles = StyleSheet.create({
+    txtDataD: {
+        textAlign: 'left',
+        fontSize: 12
+    },
+    txtDataR: {
+        textAlign: 'right',
+        fontSize: 12
+    },
     btnenviarDM: {
         width: 40,
         height: 40,
@@ -89,7 +120,8 @@ const styles = StyleSheet.create({
         // borderWidth: 3,
         borderRadius: 100,
         marginRight: 15,
-        marginBottom: 10
+        marginBottom: 10,
+        marginTop: 10
     },
     horizontalEmbaixo: {
         flexDirection: 'row',
@@ -103,7 +135,8 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderRadius: 20,
         marginLeft: 10,
-        marginBottom: 10
+        marginBottom: 10,
+        marginTop: 10
     },
     btnvoltar: {
         marginLeft: 5

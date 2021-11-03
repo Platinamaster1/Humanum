@@ -17,11 +17,11 @@ import ipconfig from '../ipconfig'
 export default React.memo(props => {
 
     const TopButtonHandler = () => {
-        a.scrollTo({ x: 0, y: 0, animated: true });
+        navegar.scrollTo({ x: 0, y: 0, animated: true });
     }
 
     const EndButtonHandler = () => {
-        a.scrollToEnd({ animated: true, duration: 3 });
+        navegar.scrollToEnd({ animated: true, duration: 3 });
     }
     const { texto } = props.route.params
     var jaFoi = 0
@@ -171,7 +171,7 @@ export default React.memo(props => {
                 </View>
             </TouchableOpacity>
 
-            <ScrollView ref={ref => { a = ref }}
+            <ScrollView ref={ref => { navegar = ref }}
                 onScroll={(event) => {
                     var currentOffset = event.nativeEvent.contentOffset.y;
                     var direction = currentOffset > this.offset ? 'down' : 'up';
