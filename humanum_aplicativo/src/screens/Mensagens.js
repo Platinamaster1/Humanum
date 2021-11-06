@@ -10,6 +10,7 @@ import Header from '../Header'
 import ipconfig from '../ipconfig'
 
 export default props => {
+    
     const [chats, setChats] = useState([])
 
     // useEffect(() => {
@@ -23,6 +24,7 @@ export default props => {
     )
 
     async function buscarChats() {
+        console.log(JSON.parse(await AsyncStorage.getItem('qtdMsg')))
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
         const usuario = JSON.parse(dadosuser)[0]
         console.log(usuario.id)
