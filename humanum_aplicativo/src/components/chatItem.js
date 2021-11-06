@@ -59,7 +59,13 @@ export default props => {
         if (dados3.length > 0) {
             setult(dados3[0].texto)
             var date = new Date(dados3[0].data)
-            var data = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()
+            var data = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':'
+            var min = date.getMinutes()
+            
+            if(min < 10)
+                data = data + '0' + min
+            else 
+                data = data + min
             sethora(data)
             if (dados3[0].idusuarioremetente == usuario.id)
                 setultenv(true)

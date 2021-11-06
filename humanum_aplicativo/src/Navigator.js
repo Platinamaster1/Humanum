@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text } from 'react-native'
+import { Text, StatusBar } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -48,7 +48,7 @@ const TabNav = props => {
     return (
         <>
         <Header navigation={props.navigation}/>
-        <Tab.Navigator initialRouteName="Inicial"
+        <Tab.Navigator initialRouteName="Busca"
             tabBarPosition={'bottom'}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color, size }) => {     
@@ -64,7 +64,7 @@ const TabNav = props => {
                     }
                     else if (route.name === 'Mensagens') {
                         iconName = 'comments'
-                        mensagens = '99+'
+                        mensagens = '0'
                     }
                     else if (route.name === 'Perfil') {
                         iconName = 'user'
