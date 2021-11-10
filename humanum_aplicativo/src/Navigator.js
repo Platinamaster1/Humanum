@@ -27,6 +27,7 @@ import AutenOuApp from './screens/AutenOuApp'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from './Header';
 import CriarGrupo from './screens/CriarGrupo';
+import Denuncias from './screens/Denuncias';
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -45,7 +46,8 @@ const Tab = createMaterialTopTabNavigator();
 const TabNav = props => {
     console.log(props.route.params[0])
     const [headerShown, setHeaderShown] = useState(true)
-    const {id, nome, descricao, datacriacao, pontos, banner, foto} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
+    const {id, nome, descricao, datacriacao, pontos, banner, foto, moderador} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
+    console.log('mod: ' + moderador)
     return (
         <>
         <Header navigation={props.navigation}/>
@@ -69,6 +71,10 @@ const TabNav = props => {
                     }
                     else if (route.name === 'Perfil') {
                         iconName = 'user'
+                        mensagens = '0'
+                    }
+                    else if (route.name === 'Denuncias') {
+                        iconName = 'ban'
                         mensagens = '0'
                     }
       
@@ -100,6 +106,9 @@ const TabNav = props => {
                            data={datacriacao} pontos={pontos}
                            banner={banner} foto={foto} id={id}/>}
             </Tab.Screen>
+            {moderador > 0 &&
+                <Tab.Screen name="Denuncias" component={Denuncias} />
+            }
         </Tab.Navigator>
         </>
     )
