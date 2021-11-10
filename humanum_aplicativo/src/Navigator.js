@@ -26,6 +26,7 @@ import Mensagens from './screens/Mensagens';
 import AutenOuApp from './screens/AutenOuApp'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Header from './Header';
+import CriarGrupo from './screens/CriarGrupo';
 
 const menuConfig = {
     activeTintColor: '#A90A0A',
@@ -113,6 +114,7 @@ const AuthNavigator = () => {
             <Stack.Screen name="Texto" component={Texto} />
             <Stack.Screen name="PerfilOutros" component={PerfilOutros} />
             <Stack.Screen name="Chat" component={Chat} />
+            <Stack.Screen name="CriarGrupo" component={CriarGrupo} />
         </Stack.Navigator>
     )
 }

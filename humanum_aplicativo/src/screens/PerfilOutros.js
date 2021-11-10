@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react'
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Modal, TextInput } from 'react-native'
 import commonStyles from '../commonStyles'
 import TextosFavoritos from '../components/textosFavoritos'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -16,6 +16,8 @@ const dimensions = Dimensions.get('window');
 export default props => {
     const { user } = props.route.params
     const [livrosFav, setLivrosFav] = useState([])
+    const [denunciando, setDenunciando] = useState(false)
+    const [motivoDenuncia, setMotivoDenuncia] = useState('')
     console.log(user)
 
     buscarFavoritos = async () => {
@@ -64,6 +66,18 @@ export default props => {
         props.navigation.push("Chat", {destinatario: user, ehDM: true, chat: dados2[0]})
     }
 
+    denunciar = async () => {
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
+        const dados = {
+            idusuarioreportado: user.id,
+            idusuarioreportante: idusuario,
+            motivo: motivoDenuncia
+        }
+        const res = await axios.post('http://' + ipconfig.ip + ':3002/advertencias/usuario', dados)
+    }
+
     return (
         <>
             <View style={st.container}>
@@ -71,6 +85,28 @@ export default props => {
                     <View style={st.viewFundo}>
                         <Image style={st.imgFundo} source={{ uri: user.banner }} resizeMode='stretch' />
                     </View>
+
+                    <TouchableOpacity style={st.iconBan} onPress={() => setDenunciando(true)}>
+                        <Icon name='ban' size={30} />
+                    </TouchableOpacity>
+
+                    <Modal
+                        animationType="slide"
+                        transparent={true}
+                        visible={denunciando}
+                    >
+                        <View style={st.modal}>
+                            <Text>OI</Text>
+                            <TextInput style={st.txtMotivo} placeholder="Motivo da denuncia" onChangeText={(val) => setMotivoDenuncia(val)} />
+                            <TouchableOpacity onPress={denunciar} style={st.btn}>
+                                <Text style={{color: 'white'}}>DENUNCIAR</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => setDenunciando(false)} style={st.btn}>
+                                <Text style={{color: 'white'}}>FECHAR</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Modal>
+
                     <View style={st.viewFoto}>
                         <Image style={st.fotoPerfil} source={{ uri: user.foto }} />
                     </View>
@@ -99,6 +135,39 @@ export default props => {
 }
 
 const st = StyleSheet.create({
+    txtMotivo: {
+        borderWidth: 2,
+        borderColor: 'black',
+        width: 200,
+        borderRadius: 15
+    },
+    btn: {
+        backgroundColor: 'red',
+    },
+    modal: {
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: Dimensions.get('window').height * 2 / 7,
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        padding: 20
+    },
+    iconBan: {
+        position: 'absolute',
+        top: dimensions.height/3.1,
+        left: dimensions.width/3.5
+    },
     icon: {
         position: 'absolute',
         top: dimensions.height/3.1,
