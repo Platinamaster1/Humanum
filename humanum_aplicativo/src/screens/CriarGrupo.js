@@ -17,6 +17,8 @@ export default props => {
     const [busca, setBusca] = useState('')
     const [usuariosEncontrados, setUsuariosEncontrados] = useState([])
     const [usuariosAdicionados, setUsuariosAdicionados] = useState([])
+    const [nome, setNome] = useState('')
+    const [linkFoto, setLinkFoto] = useState('')
     const [num, setNum] = useState(0)
 
     buscarUsuarios = async (val) => {
@@ -51,11 +53,42 @@ export default props => {
         console.log(usuariosAdicionados)
     }
 
+    criarGrupo = async () => {
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
+        const dados = {
+            idusuariocriador: idusuario,
+            nome: nome,
+            privado: privado? 1: 0,
+            datacriacao: new Date(),
+            foto: linkFoto? linkFoto: 'https://static.vecteezy.com/system/resources/thumbnails/000/550/535/small/user_icon_007.jpg'
+        }
+        const res = await axios.post('http://' + ipconfig.ip + ':3002/chats/criarchat', dados)
+        const res2 = await axios.get('http://' + ipconfig.ip + ':3002/chats/' + idusuario + '/' + nome)
+        const dados2 = res2.data
+        const dados3 = {
+            idchat: dados2[0].id,
+            idusuario: idusuario
+        }
+        const res3 = await axios.post('http://' + ipconfig.ip + ':3002/chats/usuarios', dados3)
+        usuariosAdicionados.forEach( async (element) => {
+            const dados4 = {
+                idchat: dados2[0].id,
+                idusuario: element.id
+            }
+            console.log(dados4)
+            const res4 = await axios.post('http://' + ipconfig.ip + ':3002/chats/usuarios', dados4)
+        });
+    }
+
     return (
         <ScrollView>
             <View style={styles.container}>
                 <Text style={styles.texto}>Nome do grupo:</Text>
-                <TextInput placeholder="Nome" style={styles.txtNome} />
+                <TextInput placeholder="Nome" style={styles.txtNome} value={nome} onChangeText={(val) => setNome(val)} />
+                <Text style={styles.texto}>Link de imagem do grupo:</Text>
+                <TextInput placeholder="Imagem" style={styles.txtNome} value={linkFoto} onChangeText={(val) => setLinkFoto(val)} />
                 <View style={{ flexDirection: 'row' }}>
                     <CheckBox
                         disabled={false}
@@ -65,14 +98,14 @@ export default props => {
                     <Text style={styles.texto}>Privado</Text>
                 </View>
                 <Text style={styles.texto}>Integrantes:</Text>
-                {/* <FlatList data={usuariosAdicionados} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} remover={removerUsuario} />} /> */}
+                <FlatList data={usuariosAdicionados} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} remover={removerUsuario} />} />
                 {console.log(usuariosAdicionados)}
-                {usuariosAdicionados.map(item => {
+                {/* {usuariosAdicionados.map(item => {
                     console.log('coe')
                     return (
                         <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} remover={removerUsuario} />
                     )
-                })}
+                })} */}
                 <View style={styles.txtPesquisar}>
                     <Icon name={"search"} size={20} style={styles.icon} />
                     <TextInput placeholder="Pesquisar" value={busca} onChangeText={(val) => {
@@ -82,6 +115,9 @@ export default props => {
                     }} />
                 </View>
                 <FlatList data={usuariosEncontrados} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} add={adicionarUsuario} />} />
+                <TouchableOpacity style={{backgroundColor: 'red'}} onPress={criarGrupo}>
+                    <Text style={{color: 'white'}}>CRIAR GRUPO</Text>
+                </TouchableOpacity>
             </View>
         </ScrollView>
     )

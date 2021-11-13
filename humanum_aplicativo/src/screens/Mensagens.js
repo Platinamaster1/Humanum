@@ -12,6 +12,7 @@ import ipconfig from '../ipconfig'
 export default props => {
 
     const [chats, setChats] = useState([])
+    const [grupos, setGrupos] = useState([])
 
     // useEffect(() => {
     //     buscarChats()
@@ -33,11 +34,16 @@ export default props => {
         const dados = res.data
         // console.log(dados)
         setChats(dados)
+
+        const res2 = await axios.get('http://' + ipconfig.ip + ':3002/chatsusuario/' + usuario.id)
+        const dados2 = res2.data
+        setGrupos(dados2)
     }
 
     return (
         <View style={{flex: 1}}>
-            <FlatList data={chats} renderItem={({ item }) => <ChatItem chat={item} navigation={props.navigation} />} />
+            <FlatList data={chats} renderItem={({ item }) => <ChatItem chat={item} navigation={props.navigation} ehDM={true} />} />
+            <FlatList data={grupos} renderItem={({ item }) => <ChatItem grupo={item} navigation={props.navigation} ehDM={false} />} />
             <TouchableOpacity style={styles.btnCriarGrupo} onPress={() => {
                 console.log("eae")
                 props.navigation.push("CriarGrupo")

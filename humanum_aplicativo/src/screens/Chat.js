@@ -21,26 +21,49 @@ export default props => {
     })
 
     async function buscarMensagens() {
-        const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/' + chat.id)
-        const dados = res.data
-        setMensagens(dados)
-        mensagens.forEach(async (mensagem) => {
-            if(!mensagem.visualizado && mensagem.idusuarioremetente != idUsuario) {
-                console.log(mensagem.texto)
-                const info = {
-                    id: mensagem.id,
-                    visualizado: true
+        if (ehDM) {
+            const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/' + chat.id)
+            const dados = res.data
+            setMensagens(dados)
+            mensagens.forEach(async (mensagem) => {
+                if (!mensagem.visualizado && mensagem.idusuarioremetente != idUsuario) {
+                    console.log(mensagem.texto)
+                    const info = {
+                        id: mensagem.id,
+                        visualizado: true
+                    }
+                    const res = await axios.put('http://' + ipconfig.ip + ':3002/mensagens/dm', info)
                 }
-                const res = await axios.put('http://' + ipconfig.ip + ':3002/mensagens/dm', info)
-            }
-        });
-        if(primeiro == 0)
-            navegar.scrollToEnd({ animated: true, duration: 3 });
-        setPrimeiro(1)
+            });
+            if (primeiro == 0)
+                navegar.scrollToEnd({ animated: true, duration: 3 });
+            setPrimeiro(1)
+        }
+        else {
+            const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/grupo/' + chat.id)
+            const dados = res.data
+            setMensagens(dados)
+            mensagens.forEach(async (mensagem) => {
+                let aux = mensagem.visualizadogrupo
+                console.log(aux)
+                if (!aux.includes(idUsuario)) {
+                    aux.push(idUsuario)
+                    const info = {
+                        id: mensagem.id,
+                        visualizadogrupo: aux
+                    }
+                    console.log(aux)
+                    const res = await axios.put('http://' + ipconfig.ip + ':3002/mensagens/grupo', info)
+                }
+            });
+            if (primeiro == 0)
+                navegar.scrollToEnd({ animated: true, duration: 3 });
+            setPrimeiro(1)
+        }
     }
 
     enviarDM = async () => {
-        if(mensagem != '') {
+        if (mensagem != '') {
             const dados = {
                 iddm: chat.id,
                 texto: mensagem,
@@ -55,14 +78,29 @@ export default props => {
         }
     }
 
+    enviarGrupo = async () => {
+        if (mensagem != '') {
+            const dados = {
+                idchat: chat.id,
+                texto: mensagem,
+                data: new Date(),
+                idusuarioremetente: idUsuario,
+                visualizadogrupo: [idUsuario]
+            }
+            const res = await axios.post('http://' + ipconfig.ip + ':3002/mensagens/grupo', dados)
+            setMensagem('')
+            setPrimeiro(0)
+        }
+    }
+
     formatarData = (d) => {
         var date = new Date(d)
         var data = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':'
         var min = date.getMinutes()
-        
-        if(min < 10)
+
+        if (min < 10)
             data = data + '0' + min
-        else 
+        else
             data = data + min
 
         return data
@@ -75,42 +113,41 @@ export default props => {
 
     return (
         <>
-        <KeyboardAvoidingView style={styles.container}>
-            <View style={styles.cabecalho}>
-                <TouchableOpacity style={styles.icone} onPress={() => props.navigation.pop()}>
-                    <Icon name='arrow-left' size={25} />
-                {destinatario.foto ?
-                    <Image source={{ uri: destinatario.foto }} style={styles.foto} /> :
-                    <Image source={{ uri: 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg' }} style={styles.foto} />}
-                </TouchableOpacity> 
-                <Text style={[styles.center, styles.titulo]}>{ehDM ? destinatario.nome : null}</Text>
-            </View>
-            <View style={styles.mensagens}>
-                <FlatList data={mensagens} renderItem={({ item }) => {
-                    if (idUsuario != item.idusuariodestinatario)
-                        return (
-                            <View style={styles.remetente}>
-                                <Text style={styles.msg}>{item.texto}</Text>
-                                <Text style={styles.txtDataR}>{formatarData(item.data)}</Text>
-                            </View>
-                        )
-                    else
-                        return (
-                            <View style={styles.destinatario}>
-                                <Text style={styles.msg}>{item.texto}</Text>
-                                <Text style={styles.txtDataD}>{formatarData(item.data)}</Text>
-                            </View>
-                        )
-                }} ref={ref => { navegar = ref }} />
-            </View>
-            <View style={styles.enviarMsg}>
-                <TextInput value={mensagem} onChangeText={(msg) => setMensagem(msg)} style={styles.txtmsg} placeholder={'Mensagem'} placeholderTextColor='gray' multiline={true} />
-                <TouchableOpacity style={styles.btnenviarDM} onPress={enviarDM}>
-                    <Icon color={'#fddddd'} name='arrow-right' size={25} />
-                </TouchableOpacity>
-            </View>
-            {/* <TextInput /> */}
-        </KeyboardAvoidingView>
+            <KeyboardAvoidingView style={styles.container}>
+                <View style={styles.cabecalho}>
+                    <TouchableOpacity style={styles.icone} onPress={() => props.navigation.pop()}>
+                        <Icon name='arrow-left' size={25} />
+                        <Image source={ehDM ? { uri: destinatario.foto ? destinatario.foto : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg' } : { uri: chat.foto }} style={styles.foto} />
+                    </TouchableOpacity>
+                    <Text style={[styles.center, styles.titulo]}>{ehDM ? destinatario.nome : chat.nome}</Text>
+                </View>
+                <View style={styles.mensagens}>
+                    <FlatList data={mensagens} renderItem={({ item }) => {
+                        if (idUsuario == item.idusuarioremetente)
+                            return (
+                                <View style={styles.remetente}>
+                                    <Text style={styles.msg}>{item.texto}</Text>
+                                    <Text style={styles.txtDataR}>{formatarData(item.data)}</Text>
+                                </View>
+                            )
+                        else
+                            return (
+                                <View style={styles.destinatario}>
+                                    {!ehDM && <Text>{item.nome}</Text>}
+                                    <Text style={styles.msg}>{item.texto}</Text>
+                                    <Text style={styles.txtDataD}>{formatarData(item.data)}</Text>
+                                </View>
+                            )
+                    }} ref={ref => { navegar = ref }} />
+                </View>
+                <View style={styles.enviarMsg}>
+                    <TextInput value={mensagem} onChangeText={(msg) => setMensagem(msg)} style={styles.txtmsg} placeholder={'Mensagem'} placeholderTextColor='gray' multiline={true} />
+                    <TouchableOpacity style={styles.btnenviarDM} onPress={ehDM? enviarDM: enviarGrupo}>
+                        <Icon color={'#fddddd'} name='arrow-right' size={25} />
+                    </TouchableOpacity>
+                </View>
+                {/* <TextInput /> */}
+            </KeyboardAvoidingView>
         </>
     )
 }
