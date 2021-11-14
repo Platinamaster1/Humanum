@@ -86,7 +86,9 @@ export default props => {
     }
 
     buscarUsuario = async () => {
-        const url = 'http://' + ipconfig.ip + ':3002/usuarios/id/22'
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        const url = 'http://' + ipconfig.ip + ':3002/usuarios/id/' + usuario.id
         console.log(url)
         const res = await axios.get(url)
         const dados = res.data
@@ -151,36 +153,58 @@ export default props => {
     }
 
     return (
-        <View>
-            <Text style={styles.texto}>{com.nome}</Text>
-            <Text style={styles.texto}>{com.conteudo}</Text>
+        <View style={styles.container}>
+            <View style={styles.cabecalho}>
+                <Text style={styles.textoCabecalho}>{com.nome}</Text>
+                <TouchableOpacity style={styles.cabecalhoButton}
+                    onPress={() => props.onDenuncia && props.onDenuncia(comentario)}>
+                    <Icon name={'flag'} size={20} color='black' />
+                </TouchableOpacity>
+            </View>
+            <Text style={styles.textoConteudo}>{com.conteudo}</Text>
             <View style={styles.votes}>
-                <TouchableOpacity onPress={() => {
-                    mudarUpvote = (val, val2) => {
-                        setUpvotes(val)
-                        setDeuUpvote(val2)
-                    }
-                    upvote(com, mudarUpvote, deuUpvote)
-                }}>
-                    <Icon name={"arrow-circle-o-up"} size={20} style={!deuUpvote ? styles.iconN : styles.iconS} />
-                </TouchableOpacity>
-                <Text style={styles.texto}>{upvotes}</Text>
-                <TouchableOpacity onPress={() => {
-                    mudarDownvote = (val, val2) => {
-                        setDownvotes(val)
-                        setDeuDownvote(val2)
-                    }
-                    downvote(com, mudarDownvote, deuDownvote)
-                }}>
-                    <Icon name={"arrow-circle-o-down"} size={20} style={!deuDownvote ? styles.iconN : styles.iconS} />
-                </TouchableOpacity>
-                <Text style={styles.texto}>{downvotes}</Text>
+                <View style={styles.updownvote}>
+                    <TouchableOpacity onPress={() => {
+                        mudarUpvote = (val, val2) => {
+                            setUpvotes(val)
+                            setDeuUpvote(val2)
+                        }
+                        upvote(com, mudarUpvote, deuUpvote)
+                    }}>
+                        <Icon name={"arrow-circle-o-up"} size={20} style={!deuUpvote ? styles.iconN : styles.iconS} />
+                    </TouchableOpacity>
+                    <Text style={styles.textoVotes}>{upvotes}</Text>
+                </View>
+                <View style={styles.updownvote}>
+                    <TouchableOpacity onPress={() => {
+                        mudarDownvote = (val, val2) => {
+                            setDownvotes(val)
+                            setDeuDownvote(val2)
+                        }
+                        downvote(com, mudarDownvote, deuDownvote)
+                    }}>
+                        <Icon name={"arrow-circle-o-down"} size={20} style={!deuDownvote ? styles.iconN : styles.iconS} />
+                    </TouchableOpacity>
+                    <Text style={styles.textoVotes}>{downvotes}</Text>
+                </View>
             </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container: {
+        borderBottomWidth: 1,
+        paddingVertical: 10,
+    },
+    cabecalho: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    cabecalhoButton: {
+        flex: 1,
+        alignItems: 'flex-end'
+    },
     iconN: {
         color: '#a90a0a'
     },
@@ -189,9 +213,27 @@ const styles = StyleSheet.create({
     },
     votes: {
         flexDirection: 'row',
+        alignItems: 'center',
     },
-    texto: {
+    updownvote: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    textoCabecalho: {
+        flex: 3,
         fontFamily: commonStyles.fontFamily2,
-        fontSize: 20
+        fontSize: 15
+    },
+    textoConteudo: {
+        fontFamily: commonStyles.fontFamily1,
+        fontSize: 20,
+        marginVertical: 10,
+        textAlign: 'center'
+    },
+    textoVotes: {
+        fontFamily: commonStyles.fontFamily2,
+        fontSize: 15,
+        marginLeft: 10,
     }
 })
