@@ -7,7 +7,7 @@ import Texto from '../components/texto'
 import Paragrafo from '../components/paragrafo'
 import commonStyles from '../commonStyles';
 import { useFocusEffect } from '@react-navigation/native'
-//import {  } from 'react-native-gesture-handler';
+import {Picker} from '@react-native-picker/picker'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -34,6 +34,17 @@ export default React.memo(props => {
     const [direcao, setDiracao] = useState('down')
     const [comentario, setComentario] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
+    const [modalDenuncia, setModalDenuncia] = useState(false)
+    const [comentarioDenuncia, setComentarioDenuncia] = useState(0)
+    const [denuncia, setDenuncia] = useState({
+        assunto: '',
+        descricao: '',
+        tipo: 'Discurso de Ódio',
+        resolvido: 0,
+        idusuario: 0,
+        idcomentario: 0,
+        ehtrecho: 0
+    })
     const [comentarios, setComentarios] = useState([])
 
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -139,16 +150,11 @@ export default React.memo(props => {
     }
 
     buscarComentarios = async () => {
+        console.log("buscarComentarios")
+        console.log(texto)
         const res = await axios.get('http://' + ipconfig.ip + ':3002/comentarios/texto/' + texto.id)
         const dados = res.data
-        // dados.forEach(element => {
-        //     if (comentarios.length < dados.length) {
-        //         var aux = comentarios
-        //         // aux.push(<Comentario key={element.id} comentario={element} />)
-        //         aux.push(element)
-        //         setComentarios(aux)
-        //     }
-        // });
+        console.log(dados)
         setComentarios(dados)
     }
 
@@ -177,7 +183,31 @@ export default React.memo(props => {
         buscarComentarios()
     }
 
-    // buscarComentarios()
+    denunciarComentario = comentario => {
+        setModalDenuncia(true)
+        setComentarioDenuncia(comentario)
+        console.log("AAAAAAAAAAAAA")
+        console.log(comentario)
+    }
+    fazerDenuncia = async denunciaNova => {
+        console.log(denunciaNova)
+        try {
+            await axios.post('http://' + ipconfig.ip + ':3002/denuncias/', denunciaNova)
+        } catch(err) {
+            console.log(err)
+        }
+    }
+    resetarValuesDenuncia = () => {
+        setDenuncia({
+            assunto: '',
+            descricao: '',
+            tipo: '',
+            resolvido: 0,
+            idusuario: 0,
+            idcomentario: 0,
+            ehtrecho: 0
+        })
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -197,7 +227,7 @@ export default React.memo(props => {
                     <View style={styles.centralizarModal}>
                         <View style={styles.modal}>
                             <Text style={styles.texto}>oioioiaaaaaaaaaaaaaaaa</Text>
-                            <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} />} />
+                            <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} onDenuncia={denunciarComentario}/>} />
                             <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"comentário"} />
                             <TouchableOpacity style={styles.fecharModal}
                                 onPress={() => {
@@ -212,6 +242,93 @@ export default React.memo(props => {
                                 setModalVisible(false)
                             }} style={styles.fecharModal}>
                                 <Text style={[styles.fecharModalTexto, styles.texto]}>FECHAR</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalDenuncia}
+                >
+                    <View style={styles.centralizarModalDenuncia}>
+                        <View style={styles.modalDenuncia}>
+                            <TouchableOpacity style={styles.modalDenunciaLeaveButton} 
+                                onPress={() => setModalDenuncia(false)}>
+                                <Icon name={'close'} size={30} color='black' />
+                            </TouchableOpacity>
+                            <Text style={styles.modalDenunciaTxt}>Denúncia do Seguinte comentário</Text>
+                            <Text style={styles.modalDenunciaTxt2}>"{comentarioDenuncia.conteudo}"</Text>
+                            <Text style={styles.modalDenunciaTxt3}>Feito por: {comentarioDenuncia.nome}</Text>
+
+                            <TextInput placeholder='Assunto' placeholderTextColor='gray' value={denuncia.assunto} style={styles.inputModalDenuncia}
+                                    onChangeText={assunto => {
+                                        setDenuncia({
+                                            assunto: assunto,
+                                            descricao: denuncia.descricao,
+                                            tipo: denuncia.tipo,
+                                            resolvido: denuncia.resolvido,
+                                            idusuario: denuncia.idusuario,
+                                            idcomentario: denuncia.idcomentario,
+                                            ehtrecho: denuncia.ehtrecho
+                                        })
+                                    }}/>
+                            <TextInput placeholder='Descrição' placeholderTextColor='gray' value={denuncia.descricao} style={styles.inputModalDenuncia}
+                                    onChangeText={descricao => {
+                                        setDenuncia({
+                                            assunto: denuncia.assunto,
+                                            descricao: descricao,
+                                            tipo: denuncia.tipo,
+                                            resolvido: denuncia.resolvido,
+                                            idusuario: denuncia.idusuario,
+                                            idcomentario: denuncia.idcomentario,
+                                            ehtrecho: denuncia.ehtrecho
+                                        })
+                                    }}/>
+                            <View style={styles.modalDenunciaPickerView}>
+                                <Picker
+                                    selectedValue={denuncia.tipo}
+                                    mode={'dropdown'}
+                                    style={styles.modalDenunciaPicker}
+                                    itemStyle={{color: 'white'}}
+                                    onValueChange={tipo => {
+                                        setDenuncia({
+                                            assunto: denuncia.assunto,
+                                            descricao: denuncia.descricao,
+                                            tipo: tipo,
+                                            resolvido: denuncia.resolvido,
+                                            idusuario: denuncia.idusuario,
+                                            idcomentario: denuncia.idcomentario,
+                                            ehtrecho: denuncia.ehtrecho
+                                        })
+                                    }}
+                                >
+                                        <Picker.Item label="Discurso de Ódio" value = "Discurso de Ódio"/>
+                                        <Picker.Item label="Spam" value = "Spam"/>
+                                        <Picker.Item label="Abuso Verbal" value = "Abuso Verbal"/>
+                                        <Picker.Item label="Conteudo Enganoso" value = "Conteudo Enganoso"/>
+                                        <Picker.Item label="Outro" value = "Outro"/>
+                                </Picker>
+                            </View>
+                            <TouchableOpacity style={styles.modalDenunciaButton} 
+                                onPress={() => {
+                                    setModalDenuncia(false)
+                                    const denunciaNova = {
+                                        assunto: denuncia.assunto,
+                                        descricao: denuncia.descricao,
+                                        tipo: denuncia.tipo,
+                                        resolvido: denuncia.resolvido,
+                                        idusuario: comentarioDenuncia.idusuario,
+                                        idcomentario: comentarioDenuncia.id,
+                                        ehtrecho: denuncia.ehtrecho
+                                    }
+                                    console.log("COMENTARIO DENUNCIA")
+                                    console.log(comentarioDenuncia)
+                                    fazerDenuncia(denunciaNova)
+                                    resetarValuesDenuncia()
+                                }}>
+                                <Text style={styles.modalDenunciaButtonTxt}>Denunciar</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -281,8 +398,6 @@ export default React.memo(props => {
                     <Image style={styles.capa} source={{ uri: 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg' }} />}
                 </View>
 
-                <Texto texto={texto} paragrafos={paragrafos} />
-
                 <View style={styles.botoes}>
                     <TouchableOpacity style={styles.botao} onPress={() => {
                         if (favorito)
@@ -299,6 +414,10 @@ export default React.memo(props => {
                         <Text style={styles.txtBotao}>Ver comentários</Text>
                     </TouchableOpacity>
                 </View>
+
+                <Texto texto={texto} paragrafos={paragrafos} />
+
+                
             </ScrollView>
         </SafeAreaView>
     )
@@ -338,6 +457,80 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: Dimensions.get('window').height * 2 / 7
     },
+    centralizarModalDenuncia: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalDenuncia: {
+        width: Dimensions.get('window').width / 1.1,
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 6,
+        padding: 20
+    },
+    modalDenunciaLeaveButton: {
+        alignSelf: 'flex-start'
+    },
+    modalDenunciaButton: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalDenunciaButtonTxt: {
+        backgroundColor: 'red',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 60,
+        fontSize: 20,
+        fontFamily: commonStyles.fontFamily1,
+        color: 'white'
+    },
+    modalDenunciaTxt: {
+        fontSize: 18,
+        fontFamily: commonStyles.fontFamily2,
+        marginTop: 10,
+    },
+    modalDenunciaTxt2: {
+        fontSize: 20,
+        fontFamily: commonStyles.fontFamily1,
+        paddingVertical: 20,
+        width: Dimensions.get('window').width / 1.1,
+        textAlign: 'center'
+    },
+    modalDenunciaTxt3: {
+        fontSize: 12,
+        fontFamily: commonStyles.fontFamily2,
+        alignSelf: 'flex-end'
+    },
+    inputModalDenuncia: {
+        alignSelf: 'flex-start',
+        borderWidth: 1,
+        borderRadius: 60,
+        paddingHorizontal: 20,
+        marginTop: 10,
+        width: Dimensions.get('window').width / 1.25,
+        color: 'black'
+    },
+    modalDenunciaPickerView: {
+        color: 'black',
+        borderWidth: 2,
+        borderRadius: 50,
+        marginTop: 20,
+        marginBottom: 30,
+    },
+    modalDenunciaPicker: {
+        width: Dimensions.get('window').width / 1.25,
+    },
+
     modal: {
         margin: 20,
         backgroundColor: "white",
@@ -399,6 +592,7 @@ const styles = StyleSheet.create({
     tituloTxt: {
         fontFamily: commonStyles.fontFamily2,
         fontSize: 25,
+        width: Dimensions.get('window').width / 2,
         color: 'white',
     },
     icDropdown:{
