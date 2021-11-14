@@ -51,7 +51,7 @@ const TabNav = props => {
     return (
         <>
         <Header navigation={props.navigation}/>
-        <Tab.Navigator initialRouteName="Busca"
+        <Tab.Navigator initialRouteName="Inicial"
             tabBarPosition={'bottom'}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color, size }) => {     

@@ -17,7 +17,6 @@ export default props => {
             placement='right'
             backgroundColor='#fee'
             leftComponent={{ text: 'HUMANUM', style: { color: '#a90a0a', fontSize: 30, fontFamily: commonStyles.fontFamily2 }}}
-            centerComponent={<Icon name='bell' color='black' size={25} style={st.icone} />}
             rightComponent={<Icon name='power-off' color='black' size={25} style={st.icone} onPress={logoff}/>}
         />
     )

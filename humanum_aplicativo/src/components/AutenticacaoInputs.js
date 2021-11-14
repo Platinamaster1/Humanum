@@ -6,7 +6,7 @@ export default props => {
     return (
         <View style={[st.container, props.style]}>
             <Icon name={props.icon} size={20} style={st.icon} />
-            <TextInput {...props} style={st.input}/>
+            <TextInput {...props} style={st.input} autoCapitalize='none' />
         </View>
     )
 }
@@ -20,11 +20,12 @@ const st = StyleSheet.create({
     },
     icon: {
         color: '#333',
-        marginLeft: 20,
+        marginLeft: 15,
     },
     input: {
-        marginLeft: 20,
+        marginLeft: 10,
         width: '80%',
-        fontSize: 16
+        fontSize: 14,
+        color: 'black'
     }
 })

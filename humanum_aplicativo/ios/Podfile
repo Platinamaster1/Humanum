@@ -14,6 +14,8 @@ target 'humanum_aplicativo' do
 
   pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
   target 'humanum_aplicativoTests' do
     inherit! :complete
     # Pods for testing

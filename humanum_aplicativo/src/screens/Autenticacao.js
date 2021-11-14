@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ToastAndroid, Picker} from 'react-native'
+import {View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native'
 
 import Input from '../components/autenticacaoInputs'
 import commonStyles from '../commonStyles'
 import axios from 'react-native-axios'
 import DatePicker from 'react-native-datepicker'
+import {Picker} from '@react-native-picker/picker'
 import ipconfig from '../ipconfig'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 const initialState = {
@@ -15,7 +16,9 @@ const initialState = {
     telefone: '',
     dataNascimento: '2000-01-01',
     sexo: 'Masculino',
-    novoUsuario: false
+    novoUsuario: false,
+    escreveuErrado: false,
+    logou: false
 }
 
 export default class Autenticacao extends Component {
@@ -29,6 +32,38 @@ export default class Autenticacao extends Component {
         // sexo: '',
         // novoUsuario: false
         ...initialState
+    }
+
+    buscar = async (email, senha) => {
+        try {
+            console.log(email + " / " + senha)
+            var url = 'http://' + ipconfig.ip + ':3002/usuarios'
+            const response = await axios.get(url);
+            const dados = response.data
+            console.log(dados);
+            let usuario = dados.filter(objeto => objeto["email"].trim() === email.trim() && objeto["senha"] === senha)
+            // let usuario = dados.filter(objeto => {
+            //     console.log(objeto.email + ' / ' + email)
+            //     if(objeto.email.localeCompare(email) == 0)
+            //         return true
+            // })
+            console.log('aq é o usuario')
+            console.log(usuario)
+            
+            console.log(usuario.length)
+            if(usuario.length == 0) {
+                this.setState({escreveuErrado: true, senha: ''})
+                //this.setState({logado: false})
+            }
+            else {
+                //this.setState({escreveuErrado: false})
+                this.setState({logou: true})
+                await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuario))
+            }
+            return usuario
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     cadastrar = () => {
@@ -80,18 +115,19 @@ export default class Autenticacao extends Component {
                 }]}>
                     <Text style={st.subtitle}>{this.state.novoUsuario ? 'Cadastro' : 'Login'}</Text>
                     <View style={st.logInformation}>
+                        {this.state.escreveuErrado ? <Text style={{color: 'red', fontSize: 16}}>Email ou Senha Incorretos</Text> : null}
                         {this.state.novoUsuario ? 
                         <ScrollView>
                             <View>
-                                {this.state.novoUsuario ? <Input icon='user' placeholder='Nome' value={this.state.nome} style={[st.label]}
+                                {this.state.novoUsuario ? <Input icon='user' placeholder='Nome' placeholderTextColor='gray' value={this.state.nome} style={[st.label]}
                                     onChangeText={nome => this.setState({ nome })}/> : null}
-                                <Input icon='at' placeholder='E-Mail' value={this.state.email} style={st.label}
+                                <Input icon='at' placeholder='E-Mail' placeholderTextColor='gray' keyboardType='email-address' value={this.state.email} style={st.label}
                                     onChangeText={email => this.setState({ email })}/>
-                                <Input icon='lock' placeholder='Senha' value={this.state.senha} style={st.label}
+                                <Input icon='lock' placeholder='Senha' placeholderTextColor='gray' value={this.state.senha} style={st.label}
                                     onChangeText={senha => this.setState({ senha })} secureTextEntry={true}/>
-                                {this.state.novoUsuario ? <Input icon='asterisk' placeholder='Confirmar Senha' value={this.state.confirmarSenha} style={st.label}
+                                {this.state.novoUsuario ? <Input icon='asterisk' placeholder='Confirmar Senha' placeholderTextColor='gray' value={this.state.confirmarSenha} style={st.label}
                                     onChangeText={confirmarSenha => this.setState({ confirmarSenha })} secureTextEntry={true}/> : null}
-                                {this.state.novoUsuario ? <Input icon='phone' placeholder='Telefone' value={this.state.telefone} style={st.label}
+                                {this.state.novoUsuario ? <Input icon='phone' placeholder='Telefone' placeholderTextColor='gray' keyboardType='phone-pad' value={this.state.telefone} style={st.label}
                                     onChangeText={telefone => this.setState({ telefone })}/> : null}
                                 {this.state.novoUsuario ? <DatePicker date={this.state.dataNascimento} format="YYYY-MM-DD"
                                     onDateChange={(dataNascimento) => this.setState({ dataNascimento })}
@@ -125,9 +161,9 @@ export default class Autenticacao extends Component {
                             flex: 1,
                             justifyContent: 'center'
                         }}>
-                            <Input icon='at' placeholder='E-Mail' value={this.state.email} style={st.label}
+                            <Input icon='at' placeholder='E-Mail' placeholderTextColor='gray' keyboardType='email-address' value={this.state.email} style={st.label}
                                 onChangeText={email => this.setState({ email })}/>
-                            <Input icon='lock' placeholder='Senha' value={this.state.senha} style={st.label}
+                            <Input icon='lock' placeholder='Senha' placeholderTextColor='gray' value={this.state.senha} style={st.label}
                                 onChangeText={senha => this.setState({ senha })} secureTextEntry={true}/>
                         </View>}
                         <TouchableOpacity style={st.botao}
@@ -146,7 +182,8 @@ export default class Autenticacao extends Component {
                                             ToastAndroid.show('Confirme sua senha corretamente!', ToastAndroid.LONG)
                                     }
                                     else{
-                                        const dados = buscar(this.state.email, this.state.senha)
+                                        const dados = this.buscar(this.state.email, this.state.senha)
+                                        console.log(dados)
                                         if(dados)
                                             this.props.navigation.push("Home", {dadosusuario: dados})
                                     }
@@ -173,34 +210,7 @@ export default class Autenticacao extends Component {
     }
 }
 
-async function buscar(email, senha){
-    try {
-        console.log(email + " / " + senha)
-        var url = 'http://' + ipconfig.ip + ':3002/usuarios'
-        const response = await axios.get(url);
-        const dados = response.data
-        console.log(dados);
-        let usuario = dados.filter(objeto => objeto["email"].trim() === email.trim() && objeto["senha"] === senha)
-        // let usuario = dados.filter(objeto => {
-        //     console.log(objeto.email + ' / ' + email)
-        //     if(objeto.email.localeCompare(email) == 0)
-        //         return true
-        // })
-        console.log('aq é o usuario')
-        console.log(usuario)
-        await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuario))
-        console.log(usuario.length)
-        if(usuario.length == 0)
-            ToastAndroid.show('Email ou senha incorretos!', ToastAndroid.LONG)
-            //console.log('nao achou :/')
-        else
-            ToastAndroid.show('Usuário encontrado!', ToastAndroid.LONG)
-            // console.log('achou!')
-        return dados
-    } catch (error) {
-        console.error(error);
-    }
-}
+
 
 const st = StyleSheet.create({
     container: {
@@ -227,6 +237,8 @@ const st = StyleSheet.create({
     },
     logInformation: {
         flex: 1,
+        justifyContent: 'center',
+        //alignItems: 'center',
         width: '100%',
         marginTop: 15,
         backgroundColor: '#FEF2F2',
