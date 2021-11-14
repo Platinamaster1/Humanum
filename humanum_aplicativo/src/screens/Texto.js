@@ -155,7 +155,8 @@ export default React.memo(props => {
     salvarComentario = async () => {
         console.log("oi")
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
-        const idusuario = dadosuser.id
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
         const dados = {
             idtexto: texto.id,
             conteudo: comentario,
@@ -196,16 +197,15 @@ export default React.memo(props => {
                 >
                     <View style={styles.centralizarModal}>
                         <View style={styles.modal}>
-                            <Text style={styles.texto}>oioioiaaaaaaaaaaaaaaaa</Text>
                             <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} />} />
-                            <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"comentário"} />
+                            <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} />
                             <TouchableOpacity style={styles.fecharModal}
                                 onPress={() => {
                                     console.log('salvar')
                                     salvarComentario()
                                 }}
                             >
-                                <Text style={[styles.fecharModalTexto, styles.texto]}>SALVAR</Text>
+                                <Text style={[styles.fecharModalTexto, styles.texto]}>ENVIAR</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
                                 console.log('pediu pra sair')

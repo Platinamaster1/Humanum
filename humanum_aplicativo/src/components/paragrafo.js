@@ -72,14 +72,13 @@ export default props => {
             >
                 <View style={styles.centralizarModal}>
                     <View style={styles.modal}>
-                        <Text style={styles.texto}>este é o parágrafo número {props.indice}</Text>
                         <ScrollView>
                             {comentarios}
                         </ScrollView>
                         {/* <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} ehTrecho />} /> */}
-                        <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"comentário"}/>
+                        <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"}/>
                         <TouchableOpacity onPress={() => salvarComentario()} style={styles.fecharModal}>
-                            <Text style={[styles.fecharModalTexto, styles.texto]}>SALVAR</Text>
+                            <Text style={[styles.fecharModalTexto, styles.texto]}>ENVIAR</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => {
                             setModalVisible(false)

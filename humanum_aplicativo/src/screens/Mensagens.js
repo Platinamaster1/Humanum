@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChatItem from '../components/chatItem';
 import Header from '../Header'
 import ipconfig from '../ipconfig'
+import commonStyles from '../commonStyles';
 
 export default props => {
 
@@ -43,6 +44,7 @@ export default props => {
     return (
         <View style={{flex: 1}}>
             <FlatList data={chats} renderItem={({ item }) => <ChatItem chat={item} navigation={props.navigation} ehDM={true} />} />
+            <Text style={styles.txtGrupos}>Grupos:</Text>
             <FlatList data={grupos} renderItem={({ item }) => <ChatItem grupo={item} navigation={props.navigation} ehDM={false} />} />
             <TouchableOpacity style={styles.btnCriarGrupo} onPress={() => {
                 console.log("eae")
@@ -55,6 +57,11 @@ export default props => {
 }
 
 const styles = StyleSheet.create({
+    txtGrupos: {
+        marginLeft: 10,
+        fontFamily: commonStyles.fontFamily2,
+        fontSize: 20
+    },
     txtBotao: {
         color: 'white',
         fontSize: 30

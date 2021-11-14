@@ -7,7 +7,7 @@ import { useGoogleApi } from 'react-gapi'
 import commonStyles from '../commonStyles'
 import ipconfig from '../ipconfig'
 
-import Denuncia from '../components/denunciaItem'
+// import Denuncia from '../components/denunciaItem'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default props => {
