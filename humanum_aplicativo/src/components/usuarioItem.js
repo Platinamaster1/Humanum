@@ -7,16 +7,21 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 export default props => {
     const { usuario } = props
+    console.log('usuario item oi')
     console.log(usuario)
+    console.log('usuario item tchau')
     return (
         <TouchableOpacity onPress={() => {
-            // if (!props.remover) {
+            if (!props.remover) {
                 if (props.add) {
                     props.add(usuario)
                 }
                 else
                     props.navigation.push('PerfilOutros', { user: usuario })
-            // }
+            }
+            else {
+                props.remover(usuario)
+            }
         }}>
             <View style={styles.container}>
                 {props.remover &&

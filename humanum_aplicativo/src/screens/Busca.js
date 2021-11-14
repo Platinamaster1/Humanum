@@ -9,6 +9,7 @@ import Header from '../Header'
 import LivroItem from '../components/livroItem'
 import UsuarioItem from '../components/usuarioItem'
 import ipconfig from '../ipconfig'
+import GrupoItem from '../components/grupoItem';
 
 const dimensions = Dimensions.get('window');
 export default props => {
@@ -17,6 +18,7 @@ export default props => {
     const [resultadosUsuarios, setResultadosUsuarios] = useState([])
     const [textosFundo, setTextosFundo] = useState([])
     const [pesquisando, setPesquisando] = useState(false)
+    const [resultadosGrupos, setResultadosGrupos] = useState([])
 
     // useEffect(() => {
     //     textosIniciais()
@@ -48,8 +50,15 @@ export default props => {
         setResultadosUsuarios(dados)
     }
 
+    buscarGrupos = async (text) => {
+        const res = await axios.get('http://' + ipconfig.ip + ':3002/chats/publico/' + text)
+        const dados = res.data
+        // console.log(dados)
+        setResultadosGrupos(dados)
+    }
+
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.busca}>
                 <Icon name={"search"} size={20} style={styles.icon} />
                 <TextInput onChangeText={(data) => {
@@ -62,6 +71,7 @@ export default props => {
                     if(data.length > 0){
                         buscarTextos(data)
                         buscarUsuarios(data)
+                        buscarGrupos(data)
                     }
                 }} value={busca} placeholder={"Pesquisar"} placeholderTextColor='#000' style={styles.input}/>
             </View>
@@ -74,8 +84,10 @@ export default props => {
                 {pesquisando && <FlatList data={resultadosTextos} horizontal={true} renderItem={({item}) => <LivroItem key={item.id} livro={item} navigation={props.navigation} />} />}
                 {pesquisando && <Text style={styles.texto}>USUÁRIOS</Text>}
                 {pesquisando && <FlatList data={resultadosUsuarios} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} />} />}
+                {pesquisando && <Text style={styles.texto}>GRUPOS</Text>}
+                {pesquisando && <FlatList data={resultadosGrupos} horizontal={true} renderItem={({item}) => <GrupoItem key={item.id} grupo={item} navigation={props.navigation} />} />}
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

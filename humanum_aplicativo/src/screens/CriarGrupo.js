@@ -33,17 +33,20 @@ export default props => {
 
     adicionarUsuario = (usuario) => {
         var aux = usuariosAdicionados
+        console.log('aux oi')
+        console.log(aux)
+        console.log('aux tchau')
         aux.push(usuario)
         // const aux = [...usuariosAdicionados, usuario]
         setUsuariosAdicionados(aux)
-        // setBusca('')
+        setBusca('')
         // var n = num
         // n++
         // setNum(n)
         // setUsuariosEncontrados([])
-        console.log('aaa')
+        console.log('adicionarUsuario oi')
         console.log(usuariosAdicionados)
-        console.log('bbb')
+        console.log('adicionarUsuario tchau')
     }
 
     removerUsuario = (usuario) => {
@@ -81,7 +84,12 @@ export default props => {
             const res4 = await axios.post('http://' + ipconfig.ip + ':3002/chats/usuarios', dados4)
         });
     }
-
+    
+    useEffect(() => {
+        var aux = usuariosAdicionados
+        setUsuariosAdicionados(aux)
+    })
+    
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -115,7 +123,7 @@ export default props => {
                     }} />
                 </View>
                 <FlatList data={usuariosEncontrados} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} add={adicionarUsuario} />} />
-                <TouchableOpacity style={{backgroundColor: 'red'}} onPress={criarGrupo}>
+                <TouchableOpacity style={styles.botao} onPress={criarGrupo}>
                     <Text style={{color: 'white'}}>CRIAR GRUPO</Text>
                 </TouchableOpacity>
             </View>
@@ -124,6 +132,15 @@ export default props => {
 }
 
 const styles = StyleSheet.create({
+    botao: {
+        backgroundColor: 'red',
+        marginTop: 10,
+        padding: 10,
+        borderRadius: 10,
+        width: Dimensions.get('window').width * (3 / 5),
+        justifyContent: "center",
+        alignItems: "center",
+    },
     txtPesquisar: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
