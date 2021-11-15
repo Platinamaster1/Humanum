@@ -54,10 +54,6 @@ export default props => {
                 alert(response.customButton);
             } else {
                 const source = { uri: response.uri };
-
-                // You can also display the image using data:
-                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                // alert(JSON.stringify(response));s
                 console.warn('response', JSON.stringify(response));
                 setFilePath(response)
                 setFileData(response.data)
@@ -89,10 +85,6 @@ export default props => {
                 alert(response.customButton);
             } else {
                 const source = { uri: response.uri };
-
-                // You can also display the image using data:
-                // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-                // alert(JSON.stringify(response));s
                 console.warn('response', JSON.stringify(response));
                 setFilePath(response)
                 setFileData(response.data)
@@ -102,14 +94,10 @@ export default props => {
     }
 
     buscarFavoritos = async () => {
-        console.log("Tela de Perfil")
         livros = []
         linha = []
-        console.log('a')
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textosfavoritos/' + props.id)
-        console.log('b')
         const dado = res.data
-        console.log('c')
 
         for (const livroFav of dado) {
             const res2 = await axios.get('http://' + ipconfig.ip + ':3002/textos/' + livroFav.idtexto)
@@ -167,7 +155,6 @@ export default props => {
                         onPress={
                             () => {
                                 setModoEdicao(false)
-                                // Salvar os dados no banco etc
                             }
                         }>
                         {modoEdicao ? <Text style={st.salvar}>Salvar</Text> : null}
@@ -190,7 +177,6 @@ export default props => {
                                 onPress={
                                     () => {
                                         setEditNome(!editNome)
-                                        // Salvar os dados no banco etc
                                     }
                                 }>
                                 <Icon name={!editNome ? 'edit' : 'save'} size={25} />
@@ -209,7 +195,6 @@ export default props => {
                                 onPress={
                                     () => {
                                         setEditDesc(!editDesc)
-                                        // Salvar os dados no banco etc
                                     }
                                 }>
                                 <Icon name={!editDesc ? 'edit' : 'save'} size={25} />

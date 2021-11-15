@@ -20,9 +20,6 @@ export default props => {
     const [pesquisando, setPesquisando] = useState(false)
     const [resultadosGrupos, setResultadosGrupos] = useState([])
 
-    // useEffect(() => {
-    //     textosIniciais()
-    // })
     useFocusEffect(
         React.useCallback(() => {
             textosIniciais()
@@ -32,28 +29,24 @@ export default props => {
     textosIniciais = async () => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textos/')
         const dados = res.data
-        // console.log(dados)
         setTextosFundo(dados)
     }
 
     buscarTextos = async (text) => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textos/nome/' + text)
         const dados = res.data
-        // console.log(dados)
         setResultadosTextos(dados)
     }
 
     buscarUsuarios = async (text) => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/usuariosnome/' + text)
         const dados = res.data
-        // console.log(dados)
         setResultadosUsuarios(dados)
     }
 
     buscarGrupos = async (text) => {
         const res = await axios.get('http://' + ipconfig.ip + ':3002/chats/publico/' + text)
         const dados = res.data
-        // console.log(dados)
         setResultadosGrupos(dados)
     }
 

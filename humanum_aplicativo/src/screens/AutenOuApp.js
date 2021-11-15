@@ -22,7 +22,6 @@ export default class AuthOrApp extends Component {
         const dadosUsuarioLogado = await AsyncStorage.getItem('dadosUsuario')
         buscarCategoriasETextos()
         setTimeout(() => {
-            console.log("enrolando...")
 
             let dadosUsuario = null
 
@@ -121,9 +120,6 @@ async function buscarCategoriasETextos() {
 
         await AsyncStorage.setItem('livrosRecomendados', JSON.stringify(res))
         return res;
-        // console.log(ret)
-        // return ret
-        // return catRandom
     }
     catch (error) {
         console.error(error)

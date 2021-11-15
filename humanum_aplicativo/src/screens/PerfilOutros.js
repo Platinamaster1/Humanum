@@ -18,17 +18,12 @@ export default props => {
     const [livrosFav, setLivrosFav] = useState([])
     const [denunciando, setDenunciando] = useState(false)
     const [motivoDenuncia, setMotivoDenuncia] = useState('')
-    console.log(user)
 
     buscarFavoritos = async () => {
-        console.log("Tela de Perfil")
         livros = []
         linha = []
-        console.log('a')
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textosfavoritos/' + user.id)
-        console.log('b')
         const dado = res.data
-        console.log('c')
 
         for (const livroFav of dado) {
             const res2 = await axios.get('http://' + ipconfig.ip + ':3002/textos/' + livroFav.idtexto)
@@ -52,7 +47,6 @@ export default props => {
     )
 
     criarDM = async () => {
-        console.log('oi')
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
         const usuario = JSON.parse(dadosuser)[0]
         const idusuario = usuario.id

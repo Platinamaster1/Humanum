@@ -23,40 +23,19 @@ const initialState = {
 
 export default class Autenticacao extends Component {
     state = {
-        // nome: '',
-        // email: '',
-        // senha: '',
-        // confirmarSenha: '',
-        // telefone: '',
-        // dataNascimento: '',
-        // sexo: '',
-        // novoUsuario: false
         ...initialState
     }
 
     buscar = async (email, senha) => {
         try {
-            console.log(email + " / " + senha)
             var url = 'http://' + ipconfig.ip + ':3002/usuarios'
             const response = await axios.get(url);
             const dados = response.data
-            console.log(dados);
             let usuario = dados.filter(objeto => objeto["email"].trim() === email.trim() && objeto["senha"] === senha)
-            // let usuario = dados.filter(objeto => {
-            //     console.log(objeto.email + ' / ' + email)
-            //     if(objeto.email.localeCompare(email) == 0)
-            //         return true
-            // })
-            console.log('aq é o usuario')
-            console.log(usuario)
-            
-            console.log(usuario.length)
             if(usuario.length == 0) {
                 this.setState({escreveuErrado: true, senha: ''})
-                //this.setState({logado: false})
             }
             else {
-                //this.setState({escreveuErrado: false})
                 this.setState({logou: true})
                 await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuario))
             }
@@ -67,7 +46,6 @@ export default class Autenticacao extends Component {
     }
 
     cadastrar = () => {
-        // console.log('ae')
         var today = new Date()
         var data = today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDay()
         let usuarioCadastrado = {
@@ -88,7 +66,6 @@ export default class Autenticacao extends Component {
             usuarioCadastrado
         })
         .then(async function (response) {
-            console.log(response);
             ToastAndroid.show('Usuario cadastrado com sucesso!', ToastAndroid.LONG)
             await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuarioCadastrado))
         })
@@ -96,15 +73,6 @@ export default class Autenticacao extends Component {
             console.log(error);
         });
     }
-
-    // componentDidMount = async () => {~
-    //     await setTimeout(
-    //         () => loadAsync({
-    //             'FrankRuhlLibre-Regular': require('../../assets/fonts/FrankRuhlLibre-Regular.ttf'),
-    //             'JacquesFrancois-Regular': require('../../assets/fonts/JacquesFrancois-Regular.ttf')
-    //         }), 3000
-    //     )
-    // }
     
     render() {
         return (
@@ -143,10 +111,6 @@ export default class Autenticacao extends Component {
                                             marginLeft: 36
                                         }
                                     }}/> : null}
-                                {/* {this.state.novoUsuario ? <Input icon='birthday-cake' placeholder='Data de Nascimento' value={this.state.dataNascimento} style={st.label}
-                                    onChangeText={dataNascimento => this.setState({ dataNascimento })}/> : null} */}
-                                {/* {this.state.novoUsuario ? <Input icon='venus-mars' placeholder='Sexo' value={this.state.sexo} style={st.label}
-                                    onChangeText={sexo => this.setState({ sexo })}/> : null} */}
                                 <Picker
                                 selectedValue={this.state.sexo}
                                 onValueChange={sexo => this.setState({sexo})}
@@ -183,7 +147,6 @@ export default class Autenticacao extends Component {
                                     }
                                     else{
                                         const dados = this.buscar(this.state.email, this.state.senha)
-                                        console.log(dados)
                                         if(dados)
                                             this.props.navigation.push("Home", {dadosusuario: dados})
                                     }

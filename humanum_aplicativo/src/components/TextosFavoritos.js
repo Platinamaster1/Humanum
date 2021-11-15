@@ -16,7 +16,7 @@ export default props => {
     return (
         <View style={st.bigContainer}>
             <ScrollView style={st.container} horizontal={true}>
-                {props.id ? props.textos : console.log("ainda n recebi chefe")}
+                {props.id ? props.textos : null}
             </ScrollView>
         </View>
     )

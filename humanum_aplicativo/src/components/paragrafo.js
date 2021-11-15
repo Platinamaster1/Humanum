@@ -23,14 +23,9 @@ export default props => {
         }
         const response = await axios.post('http://' + ipconfig.ip + ':3002/comentarios/trecho', dados)
         setComentario("")
-        // console.log("comentario adicionado")
     }
 
     getComentarios = async () => {
-        // console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-        // console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-        // console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-        // console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
         const res = await axios.get('http://' + ipconfig.ip + ':3002/comentarios/trecho/' + props.idTexto + '/' + props.indice)
         const dados = res.data
         if (dados.length > 0)
@@ -41,29 +36,18 @@ export default props => {
         dados.forEach(element => {
             if (comentarios.length < dados.length) {
                 var aux = comentarios
-                // aux.push(<Text key={element.id}>{element.conteudo}</Text>)
-                aux.push(<Comentario jooj={i} key={element.id} comentario={element} ehTrecho />)
-                // console.log(aux)
+                aux.push(<Comentario key={element.id} comentario={element} ehTrecho />)
                 setComentarios(aux)
                 i++
             }
         });
-        // setComentarios(dados)
-        // console.log(dados)
-        // console.log(comentarios)
     }
 
-    // useEffect(() => {
-    //     getComentarios()
-    // })
     getComentarios()
 
     return (
         <TouchableOpacity onPress={() => {
-            // getComentarios()
             setModalVisible(true);
-            // getComentarios()
-            // console.log(comentarios)
         }}>
             <Modal
                 animationType="slide"
@@ -75,7 +59,6 @@ export default props => {
                         <ScrollView>
                             {comentarios}
                         </ScrollView>
-                        {/* <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} ehTrecho />} /> */}
                         <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"}/>
                         <TouchableOpacity onPress={() => salvarComentario()} style={styles.fecharModal}>
                             <Text style={[styles.fecharModalTexto, styles.texto]}>ENVIAR</Text>
@@ -103,9 +86,6 @@ const styles = StyleSheet.create({
         marginTop: Dimensions.get('window').height * 2 / 7
     },
     modal: {
-        // backgroundColor: "white",
-        // height: 100,
-        // width: 200,
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -135,8 +115,6 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 5,
         padding: 4,
-        // borderColor: 'black',
-        // borderWidth: 2
     },
     backgroundSemComentario: {
         backgroundColor: "#dedede",

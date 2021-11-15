@@ -7,7 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default props => {
     logoff = async () => {
-        console.log('estou deslogando!')
         await AsyncStorage.removeItem('dadosUsuario')
         props.navigation.push('Splash')
     }

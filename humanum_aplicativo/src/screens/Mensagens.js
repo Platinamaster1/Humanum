@@ -15,10 +15,6 @@ export default props => {
     const [chats, setChats] = useState([])
     const [grupos, setGrupos] = useState([])
 
-    // useEffect(() => {
-    //     buscarChats()
-    // })
-
     useFocusEffect(
         React.useCallback(() => {
             buscarChats()
@@ -26,14 +22,10 @@ export default props => {
     )
 
     async function buscarChats() {
-        console.log(JSON.parse(await AsyncStorage.getItem('qtdMsg')))
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
         const usuario = JSON.parse(dadosuser)[0]
-        // const usuario = dadosuser[0]
-        console.log(usuario.id)
         const res = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/usuario/' + usuario.id)
         const dados = res.data
-        // console.log(dados)
         setChats(dados)
 
         const res2 = await axios.get('http://' + ipconfig.ip + ':3002/chatsusuario/' + usuario.id)
@@ -47,8 +39,7 @@ export default props => {
             <Text style={styles.txtGrupos}>Grupos:</Text>
             <FlatList data={grupos} renderItem={({ item }) => <ChatItem grupo={item} navigation={props.navigation} ehDM={false} />} />
             <TouchableOpacity style={styles.btnCriarGrupo} onPress={() => {
-                console.log("eae")
-                props.navigation.push("CriarGrupo")
+                props.navigation.push("CriarGrupo", {navigation: props.navigation})
             }}>
                 <Text style={styles.txtBotao}>+</Text>
             </TouchableOpacity>

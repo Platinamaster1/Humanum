@@ -70,12 +70,9 @@ export default React.memo(props => {
 
     useFocusEffect(
         React.useCallback(() => {
-            console.log("entrei")
             setParagrafos([])
-            console.log(texto)
             fazerTudo(props.route.params.texto)
             return () => {
-                console.log("sai")
                 setParagrafos([])
             }
         }, [])
@@ -114,7 +111,6 @@ export default React.memo(props => {
             }
         });
         i = 0
-        console.log("tamanho -> " + paragrafos.length)
     }
 
     favoritar = async () => {
@@ -123,7 +119,6 @@ export default React.memo(props => {
         const idusuario = usuario.id
         const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         await axios.post(url)
-        console.log("foi!")
         setFavorito(true)
     }
 
@@ -133,7 +128,6 @@ export default React.memo(props => {
         const idusuario = usuario.id
         const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         await axios.delete(url)
-        console.log("foi!!!")
         setFavorito(false)
     }
 
@@ -143,23 +137,18 @@ export default React.memo(props => {
         const idusuario = usuario.id
         const url = 'http://' + ipconfig.ip + ':3002/textosfavoritos/' + idusuario + '/' + texto.id
         const response = await axios.get(url)
-        console.log(response.data)
         const dados = response.data
         if (dados.length > 0)
             setFavorito(true)
     }
 
     buscarComentarios = async () => {
-        console.log("buscarComentarios")
-        console.log(texto)
         const res = await axios.get('http://' + ipconfig.ip + ':3002/comentarios/texto/' + texto.id)
         const dados = res.data
-        console.log(dados)
         setComentarios(dados)
     }
 
     salvarComentario = async () => {
-        console.log("oi")
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
         const usuario = JSON.parse(dadosuser)[0]
         const idusuario = usuario.id
@@ -176,7 +165,6 @@ export default React.memo(props => {
     }
 
     fazerTudo = (data) => {
-        console.log("oi eu to no fazerTudo")
         checarFavoritos()
         getCategoria(data.categoria)
         getAutor(data.idautor)
@@ -187,11 +175,8 @@ export default React.memo(props => {
     denunciarComentario = comentario => {
         setModalDenuncia(true)
         setComentarioDenuncia(comentario)
-        console.log("AAAAAAAAAAAAA")
-        console.log(comentario)
     }
     fazerDenuncia = async denunciaNova => {
-        console.log(denunciaNova)
         try {
             await axios.post('http://' + ipconfig.ip + ':3002/denuncias/', denunciaNova)
         } catch(err) {
@@ -231,14 +216,12 @@ export default React.memo(props => {
                             <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} />
                             <TouchableOpacity style={styles.fecharModal}
                                 onPress={() => {
-                                    console.log('salvar')
                                     salvarComentario()
                                 }}
                             >
                                 <Text style={[styles.fecharModalTexto, styles.texto]}>ENVIAR</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
-                                console.log('pediu pra sair')
                                 setModalVisible(false)
                             }} style={styles.fecharModal}>
                                 <Text style={[styles.fecharModalTexto, styles.texto]}>FECHAR</Text>
@@ -323,8 +306,6 @@ export default React.memo(props => {
                                         idcomentario: comentarioDenuncia.id,
                                         ehtrecho: denuncia.ehtrecho
                                     }
-                                    console.log("COMENTARIO DENUNCIA")
-                                    console.log(comentarioDenuncia)
                                     fazerDenuncia(denunciaNova)
                                     resetarValuesDenuncia()
                                 }}>

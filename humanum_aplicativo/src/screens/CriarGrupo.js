@@ -20,6 +20,7 @@ export default props => {
     const [nome, setNome] = useState('')
     const [linkFoto, setLinkFoto] = useState('')
     const [num, setNum] = useState(0)
+    const {navigation} = props.route.params
 
     buscarUsuarios = async (val) => {
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
@@ -65,7 +66,7 @@ export default props => {
             nome: nome,
             privado: privado? 1: 0,
             datacriacao: new Date(),
-            foto: linkFoto? linkFoto: 'https://static.vecteezy.com/system/resources/thumbnails/000/550/535/small/user_icon_007.jpg'
+            foto: linkFoto.trim() != ''? linkFoto: 'https://static.vecteezy.com/system/resources/thumbnails/000/550/535/small/user_icon_007.jpg'
         }
         const res = await axios.post('http://' + ipconfig.ip + ':3002/chats/criarchat', dados)
         const res2 = await axios.get('http://' + ipconfig.ip + ':3002/chats/' + idusuario + '/' + nome)
@@ -83,6 +84,7 @@ export default props => {
             console.log(dados4)
             const res4 = await axios.post('http://' + ipconfig.ip + ':3002/chats/usuarios', dados4)
         });
+        navigation.pop()
     }
     
     useEffect(() => {
@@ -107,7 +109,6 @@ export default props => {
                 </View>
                 <Text style={styles.texto}>Integrantes:</Text>
                 <FlatList data={usuariosAdicionados} horizontal={true} renderItem={({item}) => <UsuarioItem key={item.id} usuario={item} navigation={props.navigation} remover={removerUsuario} />} />
-                {console.log(usuariosAdicionados)}
                 {/* {usuariosAdicionados.map(item => {
                     console.log('coe')
                     return (

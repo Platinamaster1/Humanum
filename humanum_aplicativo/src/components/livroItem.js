@@ -9,14 +9,9 @@ export default props => {
         <TouchableOpacity 
             onPress={() => {
                 const texto = props.livro
-                // console.log(texto)
-                // props.navigation.navigate('Texto', {texto: texto})
                 props.navigation.push('Texto', {texto: texto})
-                // console.log(props.livro)
             }}>
             <View style={styles.container}>
-                {/* <Text>teste</Text> */}
-                {/* {console.log(props.livro)} */}
                 {props.livro["capa"] ?
                     (<Image style={styles.livro} source={{ uri: props.livro["capa"] }} />) :
                     (<Text style={styles.texto}>{props.livro["nome"]}</Text>)}

@@ -12,7 +12,6 @@ const dimensions = Dimensions.get('window')
 export default props => {
     const [mensagens, setMensagens] = useState([])
     const [mensagem, setMensagem] = useState('')
-    // const [idUsuario, setIdUsuario] = useState(0)
     const { ehDM, destinatario, idUsuario, chat } = props.route.params
     const [primeiro, setPrimeiro] = useState(0)
 
@@ -27,7 +26,6 @@ export default props => {
             setMensagens(dados)
             mensagens.forEach(async (mensagem) => {
                 if (!mensagem.visualizado && mensagem.idusuarioremetente != idUsuario) {
-                    console.log(mensagem.texto)
                     const info = {
                         id: mensagem.id,
                         visualizado: true
@@ -45,14 +43,12 @@ export default props => {
             setMensagens(dados)
             mensagens.forEach(async (mensagem) => {
                 let aux = mensagem.visualizadogrupo
-                console.log(aux)
                 if (!aux.includes(idUsuario)) {
                     aux.push(idUsuario)
                     const info = {
                         id: mensagem.id,
                         visualizadogrupo: aux
                     }
-                    console.log(aux)
                     const res = await axios.put('http://' + ipconfig.ip + ':3002/mensagens/grupo', info)
                 }
             });
@@ -106,11 +102,6 @@ export default props => {
         return data
     }
 
-    // useState(async () => {
-    //     const id = await AsyncStorage.getItem('idLogado')
-    //     setIdUsuario(id)
-    // })
-
     return (
         <>
             <KeyboardAvoidingView style={styles.container}>
@@ -146,7 +137,6 @@ export default props => {
                         <Icon color={'#fddddd'} name='arrow-right' size={25} />
                     </TouchableOpacity>
                 </View>
-                {/* <TextInput /> */}
             </KeyboardAvoidingView>
         </>
     )

@@ -32,18 +32,15 @@ export default props => {
     loadDenuncias = async () => {
         try {
             const res = await axios.get('http://' + ipconfig.ip + ':3002/denuncias')
-            console.log(res)
             setDenuncias(res.data)
             setShowResolvedDenuncias(false)
             filterDenuncias()
-            console.log(res.data)
         } catch(err) {
             console.log(err)
         }
     }
 
     finishDenuncias = async denunciaId => {
-        console.log("Entrou")
         try {
             for (const denuncia of denuncias) {
                 if (denuncia.id === denunciaId) {
@@ -76,11 +73,8 @@ export default props => {
         else {
             setDenunciasVisiveis(denuncias)
         }
-        console.log("DDDDD")
-        console.log(denunciasVisiveis)
     }
     removerComentario = async () => {
-        console.log("Removendo...")
         const msgRemocao = "Um Moderador removeu o Comentário"
         if(comentarioModal.conteudo != msgRemocao) {
             try {
@@ -98,8 +92,6 @@ export default props => {
 
     showModal = async (idComentario, ehTrecho) => {
         setModal(true)
-        console.log("AAAAAAAAA")
-        console.log(idComentario)
         var res
         if(!ehTrecho) {
             setComentarioModalTrecho(ehTrecho)
@@ -115,7 +107,6 @@ export default props => {
         setModal(false)
     }
     toggleFilter = () => {
-        console.log(showResolvedDenuncias)
         if(showResolvedDenuncias)
             setShowResolvedDenuncias(false)
         else

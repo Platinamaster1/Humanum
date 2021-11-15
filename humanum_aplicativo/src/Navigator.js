@@ -44,10 +44,8 @@ const Stack = createStackNavigator()
 const Tab = createMaterialTopTabNavigator();
 
 const TabNav = props => {
-    console.log(props.route.params[0])
     const [headerShown, setHeaderShown] = useState(true)
     const {id, nome, descricao, datacriacao, pontos, banner, foto, moderador} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
-    console.log('mod: ' + moderador)
     return (
         <>
         <Header navigation={props.navigation}/>
@@ -78,8 +76,6 @@ const TabNav = props => {
                         mensagens = '0'
                     }
       
-                    // You can return any component that you like here!
-                    //return <Icon name={iconName} size={20} color={color} />;
                     return<IconBadge
                         MainElement={<Icon name={iconName} size={20} color={color} />}
                         BadgeElement={<Text style={{ color: 'white', fontSize: 9 }}>{mensagens}</Text>}

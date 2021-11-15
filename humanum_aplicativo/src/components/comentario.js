@@ -89,14 +89,12 @@ export default props => {
         const dadosuser = await AsyncStorage.getItem('dadosUsuario')
         const usuario = JSON.parse(dadosuser)[0]
         const url = 'http://' + ipconfig.ip + ':3002/usuarios/id/' + usuario.id
-        console.log(url)
         const res = await axios.get(url)
         const dados = res.data
         setUsuario(dados[0].nome)
     }
 
     useEffect(() => {
-        console.log('SAAAAAAAAAAAALVEEEEEEEEEEEEEEEE')
         setCom(comentario)
         setUpvotes(!deuUpvote? com.upvotes : com.upvotes + 1)
         setDownvotes(!deuDownvote? com.downvotes : com.downvotes + 1)
@@ -114,7 +112,6 @@ export default props => {
                 const data = response.data
                 if (data.length > 0) {
                     func(true)
-                    console.log('oioi')
                 }
             }
             else {
@@ -122,7 +119,6 @@ export default props => {
                 const data = response.data
                 if (data.length > 0) {
                     func(true)
-                    console.log('oioi')
                 }
             }
         }
@@ -138,7 +134,6 @@ export default props => {
                 const data = response.data
                 if (data.length > 0) {
                     func(true)
-                    console.log('oioi')
                 }
             }
             else {
@@ -146,7 +141,6 @@ export default props => {
                 const data = response.data
                 if (data.length > 0) {
                     func(true)
-                    console.log('oioi')
                 }
             }
         }

@@ -18,29 +18,6 @@ export default props => {
     const [horaUltima, setHoraUltima] = useState('')
     const [ultimaEnviada, setUltimaEnviada] = useState(false)
 
-    // useState(async () => {
-    //     const dadosuser = await AsyncStorage.getItem('dadosUsuario')
-    //     const usuario = JSON.parse(dadosuser)[0]
-    //     setIdUsuario(usuario.id)
-    //     const iddestinatario = (chat.idusuario1 == usuario.id ? chat.idusuario2 : chat.idusuario1)
-    //     const res = await axios.get('http://' + ipconfig.ip + ':3002/usuarios/id/' + iddestinatario)
-    //     const dados = res.data
-    //     setDestinatario(dados[0])
-
-    //     const res2 = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/naovisualizado/' + chat.id + '/' + usuario.id)
-    //     const dados2 = res2.data
-    //     setQtdMsg(dados2.length)
-
-    //     const res3 = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/dm/ultima/' + chat.id)
-    //     const dados3 = res3.data
-    //     setUltima(dados3[0].texto)
-    //     var date = new Date(dados3[0].data)
-    //     var data = date.getDay() + '/' + date.getMonth() + '/' + date.getFullYear() + ' ' + date.getHours() + ':' + date.getMinutes()
-    //     setHoraUltima(data)
-    //     if (dados3[0].idusuarioremetente == usuario.id)
-    //         setUltimaEnviada(true)
-    // })
-
     fazerTudoDM = async (setid, setdest, setqtd, setult, sethora, setultenv) => {
         if (ehDM) {
             const dadosuser = await AsyncStorage.getItem('dadosUsuario')
@@ -85,7 +62,6 @@ export default props => {
             const dados = res.data
             if (dados.length > 0) {
                 setult(dados[0].nome + ": " + dados[0].texto)
-                console.log(dados[0])
             }
 
             const res2 = await axios.get('http://' + ipconfig.ip + ':3002/mensagens/grupo/naovisualizado/' + grupo.id + '/' + usuario.id)
@@ -94,11 +70,6 @@ export default props => {
         }
     }
 
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         fazerTudo()
-    //     }, [])
-    // )
     useEffect(() => {
         fazerTudoDM(setIdUsuario, setDestinatario, setQtdMsg, setUltima, setHoraUltima, setUltimaEnviada)
         fazerTudoGrupo(setIdUsuario, setUltima, setQtdMsg)
