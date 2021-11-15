@@ -23,7 +23,8 @@ const initialState = {
 
 export default class Autenticacao extends Component {
     state = {
-        ...initialState
+        ...initialState,
+        dadosUsuario: [{}]
     }
 
     buscar = async (email, senha) => {
@@ -31,15 +32,18 @@ export default class Autenticacao extends Component {
             var url = 'http://' + ipconfig.ip + ':3002/usuarios'
             const response = await axios.get(url);
             const dados = response.data
-            let usuario = dados.filter(objeto => objeto["email"].trim() === email.trim() && objeto["senha"] === senha)
+            console.log("BUSCAR / LOGIN")
+            console.log(dados)
+            let usuario = await dados.filter(objeto => objeto["email"].trim() === email.trim() && objeto["senha"] === senha)
             if(usuario.length == 0) {
                 this.setState({escreveuErrado: true, senha: ''})
             }
             else {
-                this.setState({logou: true})
+                this.setState({logou: true, dadosUsuario: usuario})
+                console.log("DadosUsurio no buscar da classe Autenticacao")
+                console.log(this.state.dadosUsuario)
                 await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuario))
             }
-            return usuario
         } catch (error) {
             console.error(error);
         }
@@ -146,9 +150,14 @@ export default class Autenticacao extends Component {
                                             ToastAndroid.show('Confirme sua senha corretamente!', ToastAndroid.LONG)
                                     }
                                     else{
-                                        const dados = this.buscar(this.state.email, this.state.senha)
-                                        if(dados)
-                                            this.props.navigation.push("Home", {dadosusuario: dados})
+                                        this.buscar(this.state.email, this.state.senha)
+
+                                        setTimeout(() => {
+                                            console.log("IRIRIRIR")
+                                            console.log(this.state.dadosUsuario)
+                                            if(this.state.dadosUsuario) 
+                                                this.props.navigation.push("Home", {dadosusuario: this.state.dadosUsuario})
+                                        }, 3000)
                                     }
                                 }
                             }>

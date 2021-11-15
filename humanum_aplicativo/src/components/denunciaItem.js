@@ -31,7 +31,7 @@ export default props => {
                    renderLeftActions={getLeftContent}
                    onSwipeableLeftOpen={() => props.onDelete && props.onDelete(props.id)}>
             <TouchableWithoutFeedback
-                onPress={() => props.showModal && props.showModal(props.idcomentario, props.trecho)}>
+                onPress={() => props.showModal && props.showModal(props.idcomentario, props.ehtrecho)}>
             <View style={[style.container, {backgroundColor: props.resolvido ? 'green' : '#FFF'}]}>
                 <Text style={style.assunto}>{props.assunto}</Text>
                 <Text style={style.desc}>{props.descricao}</Text>

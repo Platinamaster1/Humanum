@@ -44,8 +44,11 @@ const Stack = createStackNavigator()
 const Tab = createMaterialTopTabNavigator();
 
 const TabNav = props => {
-    const [headerShown, setHeaderShown] = useState(true)
-    const {id, nome, descricao, datacriacao, pontos, banner, foto, moderador} = props.route.params.dadosusuario? props.route.params.dadosusuario: props.route.params[0]
+    console.log("VINDOS DO BAGULHETE")
+    console.log(props.route.params)
+    const {id, nome, descricao, datacriacao, pontos, banner, foto, moderador} = props.route.params[0] ? props.route.params[0] : props.route.params.dadosusuario[0]
+    console.log("DADOS VINDOS DO PUSH HOME")
+    console.log(id, nome, descricao, datacriacao, pontos, banner, foto, moderador)
     return (
         <>
         <Header navigation={props.navigation}/>

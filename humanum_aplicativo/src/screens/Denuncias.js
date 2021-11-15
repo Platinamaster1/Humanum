@@ -18,6 +18,8 @@ export default props => {
     )
     const[modal, setModal] = useState(false)
     const[modalExcluir, setModalExcluir] = useState(false)
+    const[modalRemoverComentario, setModalRemoverComentario] = useState(false)
+
     const[idDenunciaExcluir, setIdDenunciaExcluir] = useState(0)
     const[showResolvedDenuncias, setShowResolvedDenuncias] = useState(true)
     const[comentarioModal, setComentarioModal] = useState({
@@ -74,14 +76,23 @@ export default props => {
             setDenunciasVisiveis(denuncias)
         }
     }
+
+    showModalRemoverComentario = () => {
+        setModalRemoverComentario(true)
+    }
     removerComentario = async () => {
         const msgRemocao = "Um Moderador removeu o Comentário"
+        console.log("Comentário Modal Trecho")
+        console.log(comentarioModalTrecho)
+
         if(comentarioModal.conteudo != msgRemocao) {
             try {
-                if(comentarioModalTrecho)
+                if(comentarioModalTrecho) {
                     await axios.put('http://' + ipconfig.ip + ':3002/comentariotrecho/' + comentarioModal.id + '/' + msgRemocao)
-                else
+                }
+                else {
                     await axios.put('http://' + ipconfig.ip + ':3002/comentario/' + comentarioModal.id + '/' + msgRemocao)
+                }
                 setComentarioModal({conteudo: msgRemocao})
                 await loadDenuncias()
             } catch(err) {
@@ -92,6 +103,7 @@ export default props => {
 
     showModal = async (idComentario, ehTrecho) => {
         setModal(true)
+        console.log(ehTrecho)
         var res
         if(!ehTrecho) {
             setComentarioModalTrecho(ehTrecho)
@@ -143,7 +155,7 @@ export default props => {
                         <Text style={style.nomeUsuarioModal}>Feito por {comentarioModal.nome}</Text>
                         <TouchableOpacity style={style.removerButton}
                             onPress={() => {
-                                removerComentario()
+                                showModalRemoverComentario()
                             }}>
                             <Text style={style.removerButtonTxt}>Remover</Text>
                             <Icon name={'ban'} size={30} />
@@ -151,6 +163,7 @@ export default props => {
                 </View>
                 </View>
             </Modal>
+
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -170,6 +183,33 @@ export default props => {
                                 onPress={() => {
                                     deleteDenuncia()
                                     setModalExcluir(false)
+                                }}>
+                                <Text style={style.removerButtonTxt}>Excluir</Text>
+                            </TouchableOpacity>
+                        </View>
+                </View>
+                </View>
+            </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalRemoverComentario}
+            >
+                <View style={style.modalMaior}>
+                    <View style={style.modal}>
+                        <Text style={style.excluirModalTxt}>Tem certeza de que deseja remover este comentário?</Text>
+                        <View style={style.excluirModalButtons}>
+                            <TouchableOpacity style={style.cancelarButton}
+                                onPress={() => {
+                                    setModalRemoverComentario(false)
+                                }}>
+                                <Text style={style.removerButtonTxt}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={style.excluirButton}
+                                onPress={() => {
+                                    removerComentario()
+                                    setModalRemoverComentario(false)
                                 }}>
                                 <Text style={style.removerButtonTxt}>Excluir</Text>
                             </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Component } from 'react';
-import { Text, View, StyleSheet, Image, ScrollView, Dimensions, Modal, SafeAreaView, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback, StatusBar } from 'react-native';
+import { Text, View, StyleSheet, Image, ScrollView, Dimensions, Modal, SafeAreaView, TextInput, TouchableOpacity, FlatList, TouchableWithoutFeedback, StatusBar, ToastAndroid } from 'react-native';
 import axios from 'react-native-axios'
 import { roundToNearestPixel } from 'react-native/Libraries/Utilities/PixelRatio';
 import Texto from '../components/texto'
@@ -177,10 +177,14 @@ export default React.memo(props => {
         setComentarioDenuncia(comentario)
     }
     fazerDenuncia = async denunciaNova => {
-        try {
-            await axios.post('http://' + ipconfig.ip + ':3002/denuncias/', denunciaNova)
-        } catch(err) {
-            console.log(err)
+        if(denunciaNova.assunto != '' && denunciaNova.descricao != '' && denunciaNova.tipo != '') {
+            try {
+                await axios.post('http://' + ipconfig.ip + ':3002/denuncias/', denunciaNova)
+            } catch(err) {
+                console.log(err)
+            }
+        } else {
+            ToastAndroid.show("Complete todos os dados de sua denúncia!", 1500)
         }
     }
     resetarValuesDenuncia = () => {
@@ -211,22 +215,34 @@ export default React.memo(props => {
                     visible={modalVisible}
                 >
                     <View style={styles.centralizarModal}>
+                    {comentarios.length > 0 ?
                         <View style={styles.modal}>
-                            <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} />} />
-                            <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} />
-                            <TouchableOpacity style={styles.fecharModal}
-                                onPress={() => {
-                                    salvarComentario()
-                                }}
-                            >
-                                <Text style={[styles.fecharModalTexto, styles.texto]}>ENVIAR</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {
-                                setModalVisible(false)
-                            }} style={styles.fecharModal}>
-                                <Text style={[styles.fecharModalTexto, styles.texto]}>FECHAR</Text>
-                            </TouchableOpacity>
+                            <FlatList data={comentarios} renderItem={({item}) => <Comentario key={item.id} comentario={item} onDenuncia={denunciarComentario}/>} />
+                            <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} placeholderTextColor='gray' style={styles.addComentario} />
+                            <View style={styles.comentariosModalButtons}>
+                                <TouchableOpacity style={styles.fecharModal}
+                                    onPress={() => {
+                                        salvarComentario()
+                                    }}
+                                >
+                                    <Text style={[styles.fecharModalTexto, styles.texto]}>Enviar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {
+                                    setModalVisible(false)
+                                }} style={styles.fecharModal}>
+                                    <Text style={[styles.fecharModalTexto, styles.texto]}>Fechar</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
+                    : 
+                    <View style={styles.modal}>
+                        <Text style={styles.txt}>Esse Texto não tem Comentários</Text>
+                        <TouchableOpacity onPress={() => {
+                                setModalVisible(false)
+                        }} style={styles.fecharModal}>
+                            <Text style={[styles.fecharModalTexto, styles.texto]}>Fechar</Text>
+                        </TouchableOpacity>
+                    </View>}
                     </View>
                 </Modal>
 
@@ -475,6 +491,11 @@ const styles = StyleSheet.create({
         fontFamily: commonStyles.fontFamily1,
         color: 'white'
     },
+    txt: {
+        fontFamily: commonStyles.fontFamily2,
+        fontSize: 20,
+        textAlign: 'center'
+    },
     modalDenunciaTxt: {
         fontSize: 18,
         fontFamily: commonStyles.fontFamily2,
@@ -528,12 +549,19 @@ const styles = StyleSheet.create({
         elevation: 5,
         padding: 20
     },
+    comentariosModalButtons: {
+        flexDirection: 'row-reverse',
+        paddingHorizontal: 20,
+    },
     fecharModal: {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: 'red',
-        height: 25,
-        width: 120
+        paddingHorizontal: 30,
+        paddingVertical: 5,
+        borderRadius: 20,
+        marginTop: 10,
+        marginHorizontal: 10,
     },
     fecharModalTexto: {
         color: 'white'
@@ -612,5 +640,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         marginTop: 10,
         marginRight: 10
+    },
+    addComentario: {
+        borderBottomWidth: 1,
+        borderColor: 'gray',
+        width: Dimensions.get('window').width / 1.5,
+        alignItems: 'center',
+        color: 'black'
     },
 })

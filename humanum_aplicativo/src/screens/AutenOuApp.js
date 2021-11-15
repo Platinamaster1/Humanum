@@ -27,6 +27,16 @@ export default class AuthOrApp extends Component {
 
             try {
                 dadosUsuario = JSON.parse(dadosUsuarioLogado)
+                // dadosUsuario = [{
+                //     id: 0,
+                //     nome: '',
+                //     descricao: '',
+                //     datacriacao: '',
+                //     pontos: 0,
+                //     banner: '',
+                //     foto: '',
+                //     moderador: 0
+                // }]
                 
             } catch (e) {
                 // userData está inválido
@@ -103,7 +113,7 @@ async function buscarCategoriasETextos() {
         const response = await axios.get(url);
         var categorias = response.data
         var catRandom = []
-        var i = 4  // mudar pra 5 depois
+        var i = 4  
         while (i--) {
             var j = Math.floor(Math.random() * categorias.length)
             catRandom.push(categorias[j])
