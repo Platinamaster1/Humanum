@@ -8,6 +8,7 @@ import Comentario from './comentario'
 import ipconfig from '../ipconfig'
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default props => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -28,7 +29,12 @@ export default props => {
     })
 
     salvarComentario = async () => {
+        const dadosuser = await AsyncStorage.getItem('dadosUsuario')
+        const usuario = JSON.parse(dadosuser)[0]
+        const idusuario = usuario.id
+        console.log('id do usuario -> ' + idusuario)
         const dados = {
+            idusuario: idusuario,
             idTexto: props.idTexto,
             conteudo: comentario,
             trecho: props.indice,
@@ -44,10 +50,10 @@ export default props => {
         setComentarioDenuncia(comentario)
     }
     fazerDenuncia = async denunciaNova => {
-        if(denunciaNova.assunto != '' && denunciaNova.descricao != '' && denunciaNova.tipo != '') {
+        if (denunciaNova.assunto != '' && denunciaNova.descricao != '' && denunciaNova.tipo != '') {
             try {
                 await axios.post('http://' + ipconfig.ip + ':3002/denuncias/', denunciaNova)
-            } catch(err) {
+            } catch (err) {
                 console.log(err)
             }
         } else {
@@ -73,7 +79,7 @@ export default props => {
             setTemComentario(true)
         else
             return
-        var i =0
+        var i = 0
         dados.forEach(element => {
             if (comentarios.length < dados.length) {
                 var aux = comentarios
@@ -120,13 +126,32 @@ export default props => {
                 visible={modalVisible}
             >
                 <View style={styles.centralizarModal}>
-                {comentarios.length > 0 ?
-                    <View style={styles.modal}>
-                        <ScrollView style={styles.containerComentarios}>
-                            {comentarios}
-                        </ScrollView>                        
-                        <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} placeholderTextColor='gray' style={styles.addComentario} />
-                        <View style={styles.comentariosModalButtons}>
+                    {comentarios.length > 0 ?
+                        <View style={styles.modal}>
+                            <ScrollView style={styles.containerComentarios}>
+                                {comentarios}
+                            </ScrollView>
+                            <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} placeholderTextColor='gray' style={styles.addComentario} />
+                            <View style={styles.comentariosModalButtons}>
+                                <TouchableOpacity style={styles.fecharModal}
+                                    onPress={() => {
+                                        salvarComentario()
+                                    }}
+                                >
+                                    <Text style={[styles.fecharModalTexto, styles.texto]}>Enviar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => {
+                                    setModalVisible(false)
+                                    setComentarios([])
+                                }} style={styles.fecharModal}>
+                                    <Text style={[styles.fecharModalTexto, styles.texto]}>Fechar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        :
+                        <View style={styles.modal}>
+                            <Text style={styles.txt}>Esse Texto não tem Comentários</Text>
+                            <TextInput value={comentario} onChangeText={(texto) => setComentario(texto)} placeholder={"Seu comentário"} placeholderTextColor='gray' style={styles.addComentario} />
                             <TouchableOpacity style={styles.fecharModal}
                                 onPress={() => {
                                     salvarComentario()
@@ -136,110 +161,99 @@ export default props => {
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => {
                                 setModalVisible(false)
-                                setComentarios([])
                             }} style={styles.fecharModal}>
                                 <Text style={[styles.fecharModalTexto, styles.texto]}>Fechar</Text>
                             </TouchableOpacity>
-                        </View>
-                    </View>
-                : 
-                <View style={styles.modal}>
-                    <Text style={styles.txt}>Esse Texto não tem Comentários</Text>
-                    <TouchableOpacity onPress={() => {
-                            setModalVisible(false)
-                    }} style={styles.fecharModal}>
-                        <Text style={[styles.fecharModalTexto, styles.texto]}>Fechar</Text>
-                    </TouchableOpacity>
-                </View>}
+                        </View>}
                 </View>
             </Modal>
 
             <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalDenuncia}
-                >
-                    <View style={styles.centralizarModalDenuncia}>
-                        <View style={styles.modalDenuncia}>
-                            <TouchableOpacity style={styles.modalDenunciaLeaveButton} 
-                                onPress={() => setModalDenuncia(false)}>
-                                <Icon name={'close'} size={30} color='black' />
-                            </TouchableOpacity>
-                            <Text style={styles.modalDenunciaTxt}>Denúncia do Seguinte comentário</Text>
-                            <Text style={styles.modalDenunciaTxt2}>"{comentarioDenuncia.conteudo}"</Text>
-                            <Text style={styles.modalDenunciaTxt3}>Feito por: {comentarioDenuncia.nome}</Text>
+                animationType="slide"
+                transparent={true}
+                visible={modalDenuncia}
+            >
+                <View style={styles.centralizarModalDenuncia}>
+                    <View style={styles.modalDenuncia}>
+                        <TouchableOpacity style={styles.modalDenunciaLeaveButton}
+                            onPress={() => setModalDenuncia(false)}>
+                            <Icon name={'close'} size={30} color='black' />
+                        </TouchableOpacity>
+                        <Text style={styles.modalDenunciaTxt}>Denúncia do Seguinte comentário</Text>
+                        <Text style={styles.modalDenunciaTxt2}>"{comentarioDenuncia.conteudo}"</Text>
+                        <Text style={styles.modalDenunciaTxt3}>Feito por: {comentarioDenuncia.nome}</Text>
 
-                            <TextInput placeholder='Assunto' placeholderTextColor='gray' value={denuncia.assunto} style={styles.inputModalDenuncia}
-                                    onChangeText={assunto => {
-                                        setDenuncia({
-                                            assunto: assunto,
-                                            descricao: denuncia.descricao,
-                                            tipo: denuncia.tipo,
-                                            resolvido: denuncia.resolvido,
-                                            idusuario: denuncia.idusuario,
-                                            idcomentario: denuncia.idcomentario,
-                                            ehtrecho: denuncia.ehtrecho
-                                        })
-                                    }}/>
-                            <TextInput placeholder='Descrição' placeholderTextColor='gray' value={denuncia.descricao} style={styles.inputModalDenuncia}
-                                    onChangeText={descricao => {
-                                        setDenuncia({
-                                            assunto: denuncia.assunto,
-                                            descricao: descricao,
-                                            tipo: denuncia.tipo,
-                                            resolvido: denuncia.resolvido,
-                                            idusuario: denuncia.idusuario,
-                                            idcomentario: denuncia.idcomentario,
-                                            ehtrecho: denuncia.ehtrecho
-                                        })
-                                    }}/>
-                            <View style={styles.modalDenunciaPickerView}>
-                                <Picker
-                                    selectedValue={denuncia.tipo}
-                                    mode={'dropdown'}
-                                    style={styles.modalDenunciaPicker}
-                                    itemStyle={{color: 'white'}}
-                                    onValueChange={tipo => {
-                                        setDenuncia({
-                                            assunto: denuncia.assunto,
-                                            descricao: denuncia.descricao,
-                                            tipo: tipo,
-                                            resolvido: denuncia.resolvido,
-                                            idusuario: denuncia.idusuario,
-                                            idcomentario: denuncia.idcomentario,
-                                            ehtrecho: denuncia.ehtrecho
-                                        })
-                                    }}
-                                >
-                                        <Picker.Item label="Discurso de Ódio" value = "Discurso de Ódio"/>
-                                        <Picker.Item label="Spam" value = "Spam"/>
-                                        <Picker.Item label="Abuso Verbal" value = "Abuso Verbal"/>
-                                        <Picker.Item label="Conteudo Enganoso" value = "Conteudo Enganoso"/>
-                                        <Picker.Item label="Outro" value = "Outro"/>
-                                </Picker>
-                            </View>
-                            <TouchableOpacity style={styles.modalDenunciaButton} 
-                                onPress={() => {
-                                    setModalDenuncia(false)
-                                    const denunciaNova = {
+                        <TextInput placeholder='Assunto' placeholderTextColor='gray' value={denuncia.assunto} style={styles.inputModalDenuncia}
+                            onChangeText={assunto => {
+                                setDenuncia({
+                                    assunto: assunto,
+                                    descricao: denuncia.descricao,
+                                    tipo: denuncia.tipo,
+                                    resolvido: denuncia.resolvido,
+                                    idusuario: denuncia.idusuario,
+                                    idcomentario: denuncia.idcomentario,
+                                    ehtrecho: denuncia.ehtrecho
+                                })
+                            }} />
+                        <TextInput placeholder='Descrição' placeholderTextColor='gray' value={denuncia.descricao} style={styles.inputModalDenuncia}
+                            onChangeText={descricao => {
+                                setDenuncia({
+                                    assunto: denuncia.assunto,
+                                    descricao: descricao,
+                                    tipo: denuncia.tipo,
+                                    resolvido: denuncia.resolvido,
+                                    idusuario: denuncia.idusuario,
+                                    idcomentario: denuncia.idcomentario,
+                                    ehtrecho: denuncia.ehtrecho
+                                })
+                            }} />
+                        <View style={styles.modalDenunciaPickerView}>
+                            <Picker
+                                selectedValue={denuncia.tipo}
+                                mode={'dropdown'}
+                                style={styles.modalDenunciaPicker}
+                                itemStyle={{ color: 'white' }}
+                                onValueChange={tipo => {
+                                    setDenuncia({
                                         assunto: denuncia.assunto,
                                         descricao: denuncia.descricao,
-                                        tipo: denuncia.tipo,
+                                        tipo: tipo,
                                         resolvido: denuncia.resolvido,
-                                        idusuario: comentarioDenuncia.idusuario,
-                                        idcomentario: comentarioDenuncia.id,
+                                        idusuario: denuncia.idusuario,
+                                        idcomentario: denuncia.idcomentario,
                                         ehtrecho: denuncia.ehtrecho
-                                    }
-                                    fazerDenuncia(denunciaNova)
-                                    resetarValuesDenuncia()
-                                }}>
-                                <Text style={styles.modalDenunciaButtonTxt}>Denunciar</Text>
-                            </TouchableOpacity>
+                                    })
+                                }}
+                            >
+                                <Picker.Item label="Discurso de Ódio" value="Discurso de Ódio" />
+                                <Picker.Item label="Spam" value="Spam" />
+                                <Picker.Item label="Abuso Verbal" value="Abuso Verbal" />
+                                <Picker.Item label="Conteudo Enganoso" value="Conteudo Enganoso" />
+                                <Picker.Item label="Outro" value="Outro" />
+                            </Picker>
                         </View>
+                        <TouchableOpacity style={styles.modalDenunciaButton}
+                            onPress={() => {
+                                setModalDenuncia(false)
+                                const denunciaNova = {
+                                    assunto: denuncia.assunto,
+                                    descricao: denuncia.descricao,
+                                    tipo: denuncia.tipo,
+                                    resolvido: denuncia.resolvido,
+                                    idusuario: comentarioDenuncia.idusuario,
+                                    idcomentario: comentarioDenuncia.id,
+                                    ehtrecho: denuncia.ehtrecho
+                                }
+                                fazerDenuncia(denunciaNova)
+                                resetarValuesDenuncia()
+                            }}>
+                            <Text style={styles.modalDenunciaButtonTxt}>Denunciar</Text>
+                        </TouchableOpacity>
                     </View>
-                </Modal>
+                </View>
+            </Modal>
 
-            <View style={temComentario? [styles.container, styles.backgroundComComentario]: [styles.container, styles.backgroundSemComentario]}>
+            <View style={temComentario ? [styles.container, styles.backgroundComComentario] : [styles.container, styles.backgroundSemComentario]}>
                 <Text style={styles.texto}>{props.conteudo}</Text>
             </View>
         </TouchableOpacity>

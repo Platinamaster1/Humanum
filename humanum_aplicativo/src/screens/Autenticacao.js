@@ -49,10 +49,10 @@ export default class Autenticacao extends Component {
         }
     }
 
-    cadastrar = () => {
+    cadastrar = async () => {
         var today = new Date()
         var data = today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDay()
-        let usuarioCadastrado = {
+        const usuarioCadastrado = [{
             nome: this.state.nome,
             email: this.state.email,
             telefone: this.state.telefone,
@@ -63,19 +63,25 @@ export default class Autenticacao extends Component {
             descricao: null,
             pontos: 0,
             moderador: 0,
-            datacriacao: data,
+            datacriacao: new Date(),
             senha: this.state.senha
-        }
-        axios.post('http://' + ipconfig.ip + ':3002/usuarios', {
-            usuarioCadastrado
-        })
-        .then(async function (response) {
-            ToastAndroid.show('Usuario cadastrado com sucesso!', ToastAndroid.LONG)
-            await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuarioCadastrado))
-        })
-          .catch(function (error) {
-            console.log(error);
-        });
+        }]
+        console.log(usuarioCadastrado)
+        // axios.post('http://' + ipconfig.ip + ':3002/usuarios', {
+        //     usuarioCadastrado
+        // })
+        // .then(async function (response) {
+        //     ToastAndroid.show('Usuario cadastrado com sucesso!', ToastAndroid.LONG)
+        //     await AsyncStorage.setItem('dadosUsuario', JSON.stringify(usuarioCadastrado))
+        // })
+        //   .catch(function (error) {
+        //     console.log(error);
+        // });
+        const res = await axios.post('http://' + ipconfig.ip + ':3002/usuarios', usuarioCadastrado[0])
+        const res2 = await axios.get('http://' + ipconfig.ip + ':3002/usuarioultimo')
+        const dados2 = res2.data
+        await AsyncStorage.setItem('dadosUsuario', JSON.stringify(dados2))
+        this.props.navigation.push("Home", {dadosusuario: dados2})
     }
     
     render() {

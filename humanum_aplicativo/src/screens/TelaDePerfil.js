@@ -96,22 +96,25 @@ export default props => {
     buscarFavoritos = async () => {
         livros = []
         linha = []
+        console.log('OLHA O ID AQUI -> ' + props.id)
         const res = await axios.get('http://' + ipconfig.ip + ':3002/textosfavoritos/' + props.id)
         const dado = res.data
 
-        for (const livroFav of dado) {
-            const res2 = await axios.get('http://' + ipconfig.ip + ':3002/textos/' + livroFav.idtexto)
-            const dado2 = res2.data
-            livros.push(dado2)
+        if (dado.length > 0) {
+            for (const livroFav of dado) {
+                const res2 = await axios.get('http://' + ipconfig.ip + ':3002/textos/' + livroFav.idtexto)
+                const dado2 = res2.data
+                livros.push(dado2)
+            }
+
+            for (const livro of livros) {
+                linha.push(
+                    <LivroItem key={livro[0].id} livro={livro[0]} navigation={props.navigation} />
+                )
+            }
+            setLivrosFav(linha)
         }
 
-        for (const livro of livros) {
-            linha.push(
-                <LivroItem key={livro[0].id} livro={livro[0]} navigation={props.navigation} />
-            )
-        }
-
-        setLivrosFav(linha)
     }
 
     useFocusEffect(
