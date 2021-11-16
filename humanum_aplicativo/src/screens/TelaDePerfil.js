@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react'
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView, TextInput } from 'react-native'
 import commonStyles from '../commonStyles'
 import TextosFavoritos from '../components/textosFavoritos'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -120,6 +120,24 @@ export default props => {
         }, [])
     )
 
+    salvarAlteracoes = async () => {
+        const idusuario = props.id
+        const dados = {
+            id: idusuario,
+            nome: nome,
+            descricao: desc,
+            foto: urlPerfil,
+            banner: urlFundo
+        }
+        const res = await axios.put('http://' + ipconfig.ip + ':3002/usuario', dados)
+        await AsyncStorage.removeItem('dadosUsuario')
+        const res2 = await axios.get('http://' + ipconfig.ip + ':3002/usuarios/id/' + idusuario)
+        const data = res2.data
+        const dadosuser = data[0]
+        console.log(dadosuser)
+        await AsyncStorage.setItem('dadosUsuario', JSON.stringify(dadosuser))
+    }
+
     return (
         <ScrollView>
             <View style={st.container}>
@@ -127,19 +145,21 @@ export default props => {
                     <View style={st.viewFundo}>
                         <Image style={st.imgFundo} source={{ uri: urlFundo }} resizeMode='stretch' />
                         {modoEdicao ?
-                            <TouchableOpacity style={[st.iconCam, st.cam1]}
-                                onPress={() => { setSelecionandoImagem(true) }}>
-                                <Icon name='camera' size={25} />
-                            </TouchableOpacity>
+                            // <TouchableOpacity style={[st.iconCam, st.cam1]}
+                            //     onPress={() => { setSelecionandoImagem(true) }}>
+                            //     <Icon name='camera' size={25} />
+                            // </TouchableOpacity>
+                            <TextInput val={urlFundo} onChangeText={(val) => setUrlFundo(val)} placeholder='Link da foto do fundo' />
                             : null}
                     </View>
                     <View style={st.viewFoto}>
                         <Image style={st.fotoPerfil} source={{ uri: urlPerfil }} />
                         {modoEdicao ?
-                            <TouchableOpacity style={[st.iconCam, st.cam2]}
-                                onPress={() => { setSelecionandoImagem(true) }}>
-                                <Icon name='camera' size={25} />
-                            </TouchableOpacity>
+                            // <TouchableOpacity style={[st.iconCam, st.cam2]}
+                            //     onPress={() => { setSelecionandoImagem(true) }}>
+                            //     <Icon name='camera' size={25} />
+                            // </TouchableOpacity>
+                            <TextInput val={urlPerfil} onChangeText={(val) => setUrlPerfil(val)} placeholder='Link da foto de perfil' />
                             : null}
                     </View>
 
@@ -155,6 +175,7 @@ export default props => {
                         onPress={
                             () => {
                                 setModoEdicao(false)
+                                salvarAlteracoes()
                             }
                         }>
                         {modoEdicao ? <Text style={st.salvar}>Salvar</Text> : null}
